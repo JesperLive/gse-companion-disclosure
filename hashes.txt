@@ -1,0 +1,13 @@
+SHA-256 hashes — GSE Companion + GSE addon builds
+Recomputed and verified 2026-06-12 against files on disk.
+
+706742b44f5ea9056f67df2e8cae771cd909dd0b882a0d4c3bf87a7639d0043f  GSE Companion Setup 0.4.12.exe        (81,299,552 bytes)
+209adedde7905179832038661b5d279a95831a155d963da3190871d502f36b0f  app.asar (installed Companion logic)  (6,068,792 bytes)
+789753305d33dc21732b67948ef839f4b058fcc15e095b8be8fcb855e28d9c85  GSE-3.3.20-9-gd5e65ce.zip (public)    (2,514,665 bytes)
+7ea11bd7dbe6bb64eb1867462197c7ac52e795a0e7a528eeba77d62be475f5a0  GSE-3.3.20-9-gd5e65ce-PatronBuild.zip (2,522,115 bytes)
+
+How to reproduce:
+  certutil -hashfile "<file>" SHA256          (Windows)
+  sha256sum "<file>"                           (Linux/macOS)
+app.asar path after install:
+  %LOCALAPPDATA%\Programs\gse-companion\resources\app.asar
