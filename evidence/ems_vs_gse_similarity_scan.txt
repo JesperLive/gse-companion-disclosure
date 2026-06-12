@@ -1,0 +1,154 @@
+EMS vs GSE 3.3.20 similarity scan
+GSE files: 62  EMS files: 133
+Shared basenames: DebugWindow.lua, SpellCache.lua, Transmission.lua, WhatsNew.lua
+
+Shared function-name suffixes (26):
+  ApplyUIScale
+  DuplicateSequence
+  Fire
+  GetBaseSpellID
+  GetClickRate
+  GetCurrentSpecID
+  GetPluginSequenceStatus
+  GetUIScale
+  Hide
+  ImportMacro
+  IsShown
+  LoadPluginSequences
+  OnCommReceived
+  Print
+  RegisterAddon
+  SendSequence
+  SendSequenceMeta
+  SendSpellCache
+  SetDisabled
+  SetFont
+  SetLabel
+  SetList
+  SetValue
+  Show
+  UpdateIcon
+  UpdateMacro
+
+Shared normalized lines: 69
+EMS files containing them:
+    15  UI\SpellPicker.lua
+    10  UI\StepListView.lua
+     7  UI\WhatsNew.lua
+     7  Core\Core.lua
+     6  UI\ConditionalBuilder.lua
+     6  UI\SpellCacheViewer.lua
+     6  UI\TrackerHUD.lua
+     6  UI\FloatingMenu.lua
+     6  UI\SequenceEditor.lua
+     6  UI\ConditionalPicker.lua
+     5  UI\SequenceList.lua
+     5  UI\ComparisonFrame.lua
+     5  UI\PopupEditor.lua
+     5  Import\ExportFrame.lua
+     4  UI\RemoteBrowser.lua
+     4  Engine\TempoAdvisor.lua
+     4  UI\MainFrame.lua
+     4  UI\DebugWindow.lua
+     3  Test\theme_spec.lua
+     3  Core\ReloadGate.lua
+     3  Engine\KeybindManager.lua
+     3  Engine\StepFunctions.lua
+     3  Engine\BarIntegration.lua
+     3  Import\ImportFrame.lua
+     2  UI\VariablesTab.lua
+     2  Data\SpellCache.lua
+     2  UI\KeybindTab.lua
+     2  UI\ThemingEditor\SwatchGridWidget.lua
+     2  UI\Util.lua
+     2  Import\LegacyImport.lua
+     2  UI\TempoOverlay.lua
+     2  Core\Popup.lua
+     2  UI\ThemingEditor\InspectOverlay.lua
+     2  Import\GRIPExport.lua
+     1  Engine\SQWOptimizer.lua
+     1  Test\TestSuite.lua
+     1  Data\Defaults.lua
+     1  outputs\defaults_pre_wave14a.lua
+     1  Engine\Identity.lua
+     1  Engine\ActionCompiler.lua
+     1  Import\ExportPreview.lua
+     1  Import\LegacyMigrate.lua
+     1  UI\MinimapButton.lua
+     1  UI\RawTab.lua
+     1  UI\SettingsPanel.lua
+     1  UI\AceConfigFocusShim.lua
+     1  Core\ThemeTransport.lua
+     1  Engine\MacroManager.lua
+     1  Engine\ExecutionTracer.lua
+
+The shared lines themselves:
+  "PLAYER_SPECIALIZATION_CHANGED",
+  GameTooltip:SetOwner(button,"ANCHOR_RIGHT")
+  GameTooltip:SetOwner(self,"ANCHOR_CURSOR")
+  GameTooltip:SetOwner(self,"ANCHOR_RIGHT")
+  GameTooltip:SetSpellByID(spellID)
+  UIDropDownMenu_AddButton(info,level)
+  bgFile="Interface/Tooltips/UI-Tooltip-Background",
+  bgFile="Interface\\Buttons\\WHITE8x8",
+  bgFile="Interface\\DialogFrame\\UI-DialogBox-Background",
+  bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+  button.icon=button:CreateTexture(nil,"ARTWORK")
+  button:SetScript("OnEnter",function(self)
+  button:SetScript("OnLeave",function(self)
+  closeBtn:SetScript("OnClick",function()
+  edgeFile="Interface/Tooltips/UI-Tooltip-Border",
+  edgeFile="Interface\\Buttons\\WHITE8X8",
+  edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border",
+  edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+  elseifGetSpecializationInfothen
+  elseifbutton=="RightButton"then
+  eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+  eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+  eventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+  for_,childinipairs(children)do
+  frame:HookScript("OnShow",function()
+  frame:HookScript("OnShow",function(self)
+  frame:RegisterForDrag("LeftButton")
+  frame:SetClampedToScreen(true)
+  frame:SetFrameStrata("MEDIUM")
+  frame:SetPoint("CENTER",UIParent,"CENTER",0,0)
+  frame:SetScript("OnDragStart",function(self)
+  frame:SetScript("OnDragStop",function(self)
+  frame:SetScript("OnUpdate",nil)
+  frame:StartSizing("BOTTOMRIGHT")
+  ghost:SetScript("OnUpdate",nil)
+  ifC_SpecializationInfoandC_SpecializationInfo.GetSpecializationInfothen
+  ifC_SpellandC_Spell.GetSpellInfothen
+  ifInCombatLockdownandInCombatLockdown()then
+  ifdepsandtype(deps.Macros)=="table"then
+  ifevent=="PLAYER_ENTERING_WORLD"then
+  ifevent=="PLAYER_REGEN_DISABLED"then
+  iftype(deps.Sequences)=="table"then
+  iftype(loadoutBinds)=="table"then
+  iftype(specBinds)=="table"then
+  insets={left=4,right=4,top=4,bottom=4},
+  localchar,realm=UnitFullName("player")
+  localcontent=CreateFrame("Frame",nil,frame)
+  localcontent=CreateFrame("Frame",nil,scrollFrame)
+  localcurrent=self:GetVerticalScroll()or0
+  localcursorX,cursorY=GetCursorPosition()
+  localdeps=sequence.MetaData.Dependencies
+  localeditBox=CreateFrame("EditBox",nil,frame,"InputBoxTemplate")
+  localeventFrame=CreateFrame("Frame")
+  localfocus=GetCurrentKeyBoardFocus()
+  localinfo=UIDropDownMenu_CreateInfo()
+  localname,icon,body=GetMacroInfo(i)
+  localscale=UIParent:GetEffectiveScale()
+  popup:SetFrameStrata("DIALOG")
+  return"{"..table.concat(parts,",").."}"
+  returntable.concat(lines,"\n")
+  rootDescription:CreateButton(label,function()
+  rootDescription:CreateDivider()
+  scrollFrame:EnableMouseWheel(true)
+  scrollFrame:SetScrollChild(content)
+  self:SetAttribute("macro",nil)
+  self:SetAttribute("macrotext",nil)
+  self:SetAttribute('step',step)
+  self:SetScript("OnUpdate",nil)
+  self:UnregisterEvent("PLAYER_ENTERING_WORLD")

@@ -1,0 +1,456 @@
+GSE 3.3.20-9-gd5e65ce PUBLIC vs PATRON build diff
+PUBLIC zip: 161 files | PATRON zip: 164 files
+
+FILES ONLY IN PATRON (3):
+  + GSE_QoL/Bootstrap.lua  (254 bytes)
+  + GSE_QoL/GSE_QoL.toc  (767 bytes)
+  + GSE_QoL/QoL.lua  (13970 bytes)
+FILES ONLY IN PUBLIC (0):
+FILES DIFFERING (5):
+  * GSE/GSE.toc  pub=2109 pat=2120 bytes
+  * GSE_GUI/GSE_GUI.toc  pub=1351 pat=1362 bytes
+  * GSE_LDB/GSE_LDB.toc  pub=766 pat=777 bytes
+  * GSE_Options/GSE_Options.toc  pub=788 pat=799 bytes
+  * GSE_Utils/GSE_Utils.toc  pub=1030 pat=1041 bytes
+
+======================================================================
+DIFF: GSE/GSE.toc (11 diff lines)
+--- public/GSE/GSE.toc
++++ patron/GSE/GSE.toc
+@@ -3,7 +3,7 @@
+ ## Title: |cFFFFFFFFGS|r|cFF00FFFFE|r
+ ## Notes: Create Sequence buttons and Macros using powerful API functions.
+ ## Author: TimothyLuke
+-## Version: 3.3.20-9-gd5e65ce
++## Version: 3.3.20-9-gd5e65ce-PatronBuild
+ ## SavedVariables: GSEOptions GSESequences GSESpellCache GSEVariables GSEMacros GSEPlatformIDs GSEVariablePlatformIDs GSEMacroPlatformIDs
+ ## SavedVariablesPerCharacter: GSE_C GSELegacyLibraryBackup
+ ## LoadSavedVariablesFirst: 1
+======================================================================
+DIFF: GSE_GUI/GSE_GUI.toc (11 diff lines)
+--- public/GSE_GUI/GSE_GUI.toc
++++ patron/GSE_GUI/GSE_GUI.toc
+@@ -3,7 +3,7 @@
+ ## Title: |cFFFFFFFFGS|r|cFF00FFFFE|r |cFF808080Editor and User Interface|r
+ ## Notes: GSE GUI
+ ## Author: TimothyLuke
+-## Version: 3.3.20-9-gd5e65ce
++## Version: 3.3.20-9-gd5e65ce-PatronBuild
+ ## Dependencies: GSE GSE_Utils
+ ## OptionalDeps: GSE2, Bartender4, ElvUI, NDui, Dominos, EllesmereUI, EllesmereUIActionBars
+ ## LoadOnDemand: 1
+======================================================================
+DIFF: GSE_LDB/GSE_LDB.toc (11 diff lines)
+--- public/GSE_LDB/GSE_LDB.toc
++++ patron/GSE_LDB/GSE_LDB.toc
+@@ -3,7 +3,7 @@
+ ## Title: |cFFFFFFFFGS|r|cFF00FFFFE|r |cFF808080Data Feeds and Minimap|r
+ ## Notes: LibDataBroker Plugin for GSE
+ ## Author: TimothyLuke
+-## Version: 3.3.20-9-gd5e65ce
++## Version: 3.3.20-9-gd5e65ce-PatronBuild
+ ## Dependencies: GSE GSE_Utils
+ ## IconTexture: Interface\Addons\GSE_GUI\Assets\GSE_512x512-Transparent.png
+ ## Category-enUS: Combat
+======================================================================
+DIFF: GSE_Options/GSE_Options.toc (11 diff lines)
+--- public/GSE_Options/GSE_Options.toc
++++ patron/GSE_Options/GSE_Options.toc
+@@ -3,7 +3,7 @@
+ ## Title: |cFFFFFFFFGS|r|cFF00FFFFE|r |cFF808080Configuration Options|r
+ ## Notes: GSE Configuration Options
+ ## Author: TimothyLuke
+-## Version: 3.3.20-9-gd5e65ce
++## Version: 3.3.20-9-gd5e65ce-PatronBuild
+ ## Dependencies: GSE_Utils
+ ## IconTexture: Interface\Addons\GSE_GUI\Assets\GSE_512x512-Transparent.png
+ ## Category-enUS: Combat
+======================================================================
+DIFF: GSE_Utils/GSE_Utils.toc (11 diff lines)
+--- public/GSE_Utils/GSE_Utils.toc
++++ patron/GSE_Utils/GSE_Utils.toc
+@@ -2,7 +2,7 @@
+ ## Title: |cFFFFFFFFGS|r|cFF00FFFFE|r |cFF808080Utility Functions|r
+ ## Notes: Optional Utilities for GSE
+ ## Author: TimothyLuke
+-## Version: 3.3.20-9-gd5e65ce
++## Version: 3.3.20-9-gd5e65ce-PatronBuild
+ ## Dependencies: GSE
+ ## IconTexture: Interface\Addons\GSE_GUI\Assets\GSE_512x512-Transparent.png
+ ## Category-enUS: Combat
+======================================================================
+PATRON-ONLY FILE IN FULL: GSE_QoL/Bootstrap.lua
+local _, ns = ...
+ns.deferred = ns.deferred or {}
+
+function GSE_QoL_Initialize(gse)
+    if ns.GSE then return end
+    ns.GSE = gse
+    local queue = ns.deferred
+    ns.deferred = nil
+    for _, fn in ipairs(queue) do
+        fn()
+    end
+end
+======================================================================
+PATRON-ONLY FILE IN FULL: GSE_QoL/GSE_QoL.toc
+## Interface: 11508, 20505, 50503, 50504, 120005, 120007
+
+## Title: |cFFFFFFFFGS|r|cFF00FFFFE|r |cFF808080Quality of Life Updates|r
+## Notes: GSE Quality of Life
+## Author: TimothyLuke
+## Version: 3.3.20-9-gd5e65ce-PatronBuild
+## Dependencies: GSE_Utils GSE_Options
+## IconTexture: Interface\Addons\GSE_GUI\Assets\GSE_512x512-Transparent.png
+## Category-enUS: Combat
+## Category-deDE: Kampf
+## Category-esES: Combate
+## Category-esMX: Combate
+## Category-frFR: Combat
+## Category-itIT: Combattimento
+## Category-koKR: 전투
+## Category-ptBR: Combate
+## Category-ruRU: Бой
+## Category-zhCN: 战斗
+## Category-zhTW: 戰鬥
+## Group: GSE
+
+
+# Bootstrap exposes _G.GSE_QoL_Initialize that main GSE calls on ADDON_LOADED.
+Bootstrap.lua
+
+QoL.lua
+======================================================================
+PATRON-ONLY FILE IN FULL: GSE_QoL/QoL.lua
+local _, ns = ...
+ns.deferred = ns.deferred or {}
+
+local function setup()
+local GSE = ns.GSE
+local Statics = GSE.Static
+local L = GSE.L
+
+-- ============================================================================
+-- Macro Insertion Toolbar moved to the GSE_MacroToolbar addon.
+-- This file now contains the native icon picker, OnBuildIconMenu, Patron
+-- sequence checksum stamper, and the Skyriding Bind Bar (Retail only).
+-- See GSE_MacroToolbar/MacroToolbar.lua for the toolbar code.
+-- ============================================================================
+
+
+-- Native WoW icon picker, owned by GSE.
+--
+-- Pattern lifted from Jaliborc/BagBrother config/panels/ruleEdit.lua Ã¢â‚¬â€
+-- the only public addon I found that successfully creates a STANDALONE
+-- popup from IconSelectorPopupFrameTemplate (rather than borrowing
+-- Blizzard's MacroPopupFrame, which is hard-coupled to MacroFrame and
+-- silently does nothing when shown without it). Critical bits the
+-- earlier "obvious" implementation missed:
+--   * Explicit SetSize Ã¢â‚¬â€ the template's XML <Size> doesn't reliably
+--     apply to a CreateFrame'd virtual template instance.
+--   * Explicit SetPoint on `IconSelector` inside `BorderBox`. Without
+--     this the icon grid has no anchor, so even though the popup is
+--     "showing" you see nothing render.
+--   * iconDataProvider + SetSelectionsDataProvider + SelectedCallback
+--     wired ONCE at frame creation, not per-show. The template mixin
+--     already provides GetIconByIndex/GetNumIcons/GetIndexOfIcon as
+--     dataProvider proxies, so we don't redefine them.
+--   * No OnShow / OnHide override needed Ã¢â‚¬â€ the template's own OnShow
+--     handles event registration; we just position once.
+local iconPickerCallback = nil
+local iconPickerFrame = nil
+
+local function buildIconPickerFrame()
+    if iconPickerFrame then return iconPickerFrame end
+    if not IconSelectorPopupFrameTemplateMixin then return nil end
+
+    local f = CreateFrame("Frame", "GSE_IconSelectorPopupFrame", UIParent, "IconSelectorPopupFrameTemplate")
+    f:Hide()
+    -- The template's instantiation adds its own anchor (TOPLEFT to UIParent),
+    -- so a plain SetPoint("CENTER") gets queued AFTER it -- GetPoint(1)
+    -- returns TOPLEFT and the popup paints in the screen's top-left corner
+    -- (behind addon trays, easy to miss). MakePopup's center=true clears
+    -- all points first, then anchors centre -- same pattern Jaliborc/
+    -- BagBrother uses.
+    GSE.UI.MakePopup(f, {center = true, movable = true})
+
+    -- Strip the macro-name workflow Blizzard's template assumes Ã¢â‚¬â€ the
+    -- name editbox, its header label, the "Currently Selected" preview
+    -- on the right, and the Okay button itself are all geared toward
+    -- creating/editing a named macro. We just want "click an icon Ã¢â€ â€™
+    -- return it." Hide them all and skip the Okay-button confirm step.
+    if f.BorderBox then
+        if f.BorderBox.IconSelectorEditBox    then f.BorderBox.IconSelectorEditBox:Hide() end
+        if f.BorderBox.EditBoxHeaderText      then f.BorderBox.EditBoxHeaderText:Hide() end
+        if f.BorderBox.SelectedIconArea       then f.BorderBox.SelectedIconArea:Hide() end
+        if f.BorderBox.OkayButton             then f.BorderBox.OkayButton:Hide() end
+    end
+
+    -- Initialise the icon data provider ONCE. Methods GetIconByIndex /
+    -- GetNumIcons / GetIndexOfIcon are inherited from
+    -- IconSelectorPopupFrameTemplateMixin and auto-proxy through this.
+    f.iconDataProvider = CreateAndInitFromMixin(
+        IconDataProviderMixin, IconDataProviderExtraType.None)
+
+    -- The icon grid needs an explicit anchor inside the BorderBox.
+    -- Anchored higher than BagBrother's offset because we hid the
+    -- name-entry section above it.
+    f.IconSelector:ClearAllPoints()
+    f.IconSelector:SetPoint("TOPLEFT", f.BorderBox, "TOPLEFT", 21, -56)
+    f.IconSelector:SetSelectionsDataProvider(
+        GenerateClosure(f.GetIconByIndex, f),
+        GenerateClosure(f.GetNumIcons,    f))
+
+    -- Single-click commit: as soon as the user picks an icon, fire the
+    -- callback and hide. Cancel button still works normally Ã¢â‚¬â€ the user
+    -- can dismiss without a selection. No Okay-button round-trip.
+    f.IconSelector:SetSelectedCallback(function(_, icon)
+        if iconPickerCallback and icon then
+            local cb = iconPickerCallback
+            iconPickerCallback = nil
+            cb(icon)
+        end
+        f:Hide()
+    end)
+
+    -- Trim the popup height since we removed the top section.
+    f:SetSize(525, 460)
+
+    -- Cancel still works Ã¢â‚¬â€ clear pending callback so a later Show
+    -- doesn't accidentally fire it.
+    function f:CancelButton_OnClick()
+        IconSelectorPopupFrameTemplateMixin.CancelButton_OnClick(self)
+        iconPickerCallback = nil
+    end
+
+    iconPickerFrame = f
+    return f
+end
+
+local function ShowNativeIconPicker(callback)
+    local f = buildIconPickerFrame()
+    if not f then
+        GSE.Print("|cffff6666GSE QoL:|r icon picker template unavailable.", "Error")
+        return
+    end
+    iconPickerCallback = callback
+    -- Scroll the grid to its top on each open so it renders cleanly.
+    -- Wrapped in pcall because the icon data provider can lazy-init
+    -- and throw on the first show after a /reload Ã¢â‚¬â€ when invoked from
+    -- inside a context-menu callback the menu system swallows errors
+    -- silently and the user just sees nothing happen.
+    local ok, err = pcall(function()
+        if f.IconSelector and f.iconDataProvider and f.iconDataProvider:GetNumIcons() > 0 then
+            f.IconSelector:SetSelectedIndex(1)
+            f.IconSelector:ScrollToSelectedIndex()
+        end
+    end)
+    if not ok then
+        GSE.Print("|cffff6666GSE QoL:|r icon picker init failed: " .. tostring(err), "Error")
+    end
+    f:Show()
+end
+
+-- Appended to the icon context menu in the editor for QoL users.
+GSE.OnBuildIconMenu = function(rootDescription, lbl, sequence, version, keyPath)
+    rootDescription:CreateDivider()
+    rootDescription:CreateButton(L["Choose any icon..."], function()
+        ShowNativeIconPicker(function(iconID)
+            lbl:SetText("|T" .. iconID .. ":0|t")
+            sequence.Versions[version].Actions[keyPath].Icon = iconID
+            sequence.Versions[version].Actions[keyPath].IconUserSelected = true
+        end)
+    end)
+end
+
+-- Patron feature: stamp the checksum onto the locally saved sequence on every save.
+-- Non-patrons only receive a checksum via the export path.
+local function onSequenceSaved(_, sequenceName)
+    if not GSE.Patron then return end
+    if not GSE.ComputeSequenceChecksum then return end
+    for classid = 0, 13 do
+        local seq = GSE.Library[classid] and GSE.Library[classid][sequenceName]
+        if seq and seq.MetaData then
+            seq.MetaData.Checksum = GSE.ComputeSequenceChecksum(seq)
+            GSESequences[classid][sequenceName] = GSE.EncodeMessage({sequenceName, seq})
+            break
+        end
+    end
+end
+GSE:RegisterMessage(Statics.Messages.SEQUENCE_UPDATED, onSequenceSaved)
+
+-- Skyriding Bind Bar for Retail
+if GSE.GameMode >= 11 then
+    -- Native Blizzard Settings subcategory. Lifted from the master-branch
+    -- pattern that was overwritten by the AceGUI removal pass — register a
+    -- vertical layout subcategory and add native button initializers, one
+    -- per vehicle slot. CreateSettingsButtonInitializer + SettingsPanel are
+    -- standard Blizzard APIs (11.0+); the panel rebuilds each open from
+    -- the initializer data so the displayed text always reflects what
+    -- was saved.
+    local skyOptions = Settings.RegisterVerticalLayoutSubcategory(
+        Settings.GetCategory(GSE.MenuCategoryID),
+        L["Skyriding / Vehicle Keybinds"]
+    )
+
+    do
+        local layout = SettingsPanel:GetLayout(skyOptions)
+        layout:AddInitializer(Settings.CreateElementInitializer("SettingsListSectionHeaderTemplate", {
+            name = L["Skyriding / Vehicle Keybinds"],
+            tooltip = "Override bindings for Skyriding, Vehicle, Possess and Override Bars",
+        }))
+    end
+
+    local slotInits = {}
+
+    local function onKeyDown(self, key)
+        if key == "LCTRL" or key == "RCTRL" or key == "LALT" or key == "RALT" or
+           key == "LSHIFT" or key == "RSHIFT" or key == "LMETA" or key == "RMETA" then
+            return
+        end
+        local slotIndex = self.gseSlot
+        local binding
+        if key == "ESCAPE" then
+            if GSE.isEmpty(GSEOptions.SkyRidingBinds) then GSEOptions.SkyRidingBinds = {} end
+            GSEOptions.SkyRidingBinds[tostring(slotIndex)] = nil
+            binding = L["Not Bound"]
+        else
+            local mods = ""
+            if IsControlKeyDown() then mods = "CTRL-" .. mods end
+            if IsAltKeyDown()     then mods = "ALT-"  .. mods end
+            if IsShiftKeyDown()   then mods = "SHIFT-".. mods end
+            binding = mods .. key
+            if GSE.isEmpty(GSEOptions.SkyRidingBinds) then GSEOptions.SkyRidingBinds = {} end
+            GSEOptions.SkyRidingBinds[tostring(slotIndex)] = binding
+        end
+        if GSE.UpdateVehicleBar then GSE.UpdateVehicleBar() end
+        self:SetText(binding)
+        self:SetScript("OnKeyDown", nil)
+        self:EnableKeyboard(false)
+        if self.SetPropagateKeyboardInput then self:SetPropagateKeyboardInput(true) end
+        -- Keep initializer data in sync so the panel shows the current
+        -- binding when re-opened. Without this the row text reverts to the
+        -- initial value supplied at register time (typically "Not Bound").
+        local init = slotInits[slotIndex]
+        if init and init.GetData then
+            local data = init:GetData()
+            if data then data.buttonText = binding end
+        end
+    end
+
+    for i = 1, 12 do
+        local slotIndex = i
+        local layout = SettingsPanel:GetLayout(skyOptions)
+        local init = CreateSettingsButtonInitializer(
+            L["Skyriding Button"] .. " " .. i,
+            (GSEOptions.SkyRidingBinds and GSEOptions.SkyRidingBinds[tostring(i)]) or L["Not Bound"],
+            function(btnArg)
+                if not btnArg then return end
+                local btn = btnArg
+                btn.gseSlot = slotIndex
+                btn:SetText(L["Press a key..."])
+                if btn.SetPropagateKeyboardInput then btn:SetPropagateKeyboardInput(false) end
+                btn:EnableKeyboard(true)
+                btn:SetScript("OnKeyDown", onKeyDown)
+            end,
+            "",
+            false
+        )
+        slotInits[i] = init
+        layout:AddInitializer(init)
+    end
+
+
+    -- Vehicle/Skyriding/PetBattle binding handler. When the player enters a
+    -- vehicle, possess bar, override bar, Skyriding (bonusbar:5), or a pet
+    -- battle, redirect each configured key to ACTIONBUTTON<n> as a priority
+    -- override -- which beats GSE's base sequence binding and falls back to
+    -- it automatically when ClearBindings() runs on dismount/exit.
+    -- ACTIONBUTTON<n> already does the right thing for whatever bar is
+    -- currently active, so no actionpage / intermediate-button indirection
+    -- is needed.
+    local VehicleBar = CreateFrame("Frame", nil, nil, "SecureHandlerAttributeTemplate")
+    VehicleBar:Hide()
+
+    -- Compile the user's SkyRidingBinds map into VehicleKeybind inside the
+    -- restricted environment. Called once at init and again whenever the
+    -- user changes a bind in Options.
+    function GSE.UpdateVehicleBar()
+        local tableval = {}
+        if GSE.isEmpty(GSEOptions.SkyRidingBinds) then
+            GSEOptions.SkyRidingBinds = {}
+        end
+        local tablevals = false
+        for k, v in pairs(GSEOptions.SkyRidingBinds) do
+            table.insert(tableval, k .. "\001" .. v)
+            tablevals = true
+        end
+        local executionString =
+            "VehicleKeybindTable = newtable([=======[" ..
+            string.join("]=======],[=======[", unpack(tableval)) ..
+                "]=======])" ..
+                    [[
+            VehicleKeybind = newtable()
+            for _,v in ipairs(VehicleKeybindTable) do
+                local x, y = strsplit("\001",v)
+                VehicleKeybind[tonumber(x)] = y
+            end
+
+            ]]
+        if not tablevals then
+            executionString = "VehicleKeybind = newtable()"
+        end
+        VehicleBar:Execute(executionString)
+    end
+
+    GSE.UpdateVehicleBar()
+
+    VehicleBar:SetAttribute(
+        -- Leading underscore matters. The secure infrastructure only fires
+        -- the underscore-prefixed snippet; the plain name is a silent no-op
+        -- (regression at a32c1c64 "Second Cut removing AceGUI Dependency",
+        -- restored 2026-06-01). Do not drop the underscore again.
+        "_onattributechanged",
+        [[
+  if name == "vehicletype" then
+    if value == "vehicle" then        -- Vehicles / Possess / Override / Skyriding
+      for i = 1, 12 do
+        if VehicleKeybind[i] then self:SetBinding(true, VehicleKeybind[i], "ACTIONBUTTON"..i) end
+      end
+    elseif value == "petbattle" then  -- Pet battle
+      for i = 1, 6 do
+        if VehicleKeybind[i] then self:SetBinding(true, VehicleKeybind[i], "ACTIONBUTTON"..i) end
+      end
+    elseif value == "none" then       -- Back to normal, drop our overrides
+      self:ClearBindings()
+    end
+  end
+]]
+    )
+
+    RegisterAttributeDriver(
+        VehicleBar,
+        "vehicletype",
+        "[vehicleui][possessbar][overridebar][bonusbar:5] vehicle; [petbattle] petbattle; none"
+    )
+end
+end
+table.insert(ns.deferred, setup)
+======================================================================
+MARKER SCAN (patron-only + differing + patron/qol-named files):
+GSE/GSE.toc:6: ## Version: 3.3.20-9-gd5e65ce-PatronBuild
+GSE/GSE.toc:64: API\Checksum.lua
+GSE_GUI/GSE_GUI.toc:6: ## Version: 3.3.20-9-gd5e65ce-PatronBuild
+GSE_LDB/GSE_LDB.toc:6: ## Version: 3.3.20-9-gd5e65ce-PatronBuild
+GSE_Options/GSE_Options.toc:6: ## Version: 3.3.20-9-gd5e65ce-PatronBuild
+GSE_QoL/GSE_QoL.toc:6: ## Version: 3.3.20-9-gd5e65ce-PatronBuild
+GSE_QoL/QoL.lua:11: -- This file now contains the native icon picker, OnBuildIconMenu, Patron
+GSE_QoL/QoL.lua:12: -- sequence checksum stamper, and the Skyriding Bind Bar (Retail only).
+GSE_QoL/QoL.lua:142: -- Patron feature: stamp the checksum onto the locally saved sequence on every save.
+GSE_QoL/QoL.lua:143: -- Non-patrons only receive a checksum via the export path.
+GSE_QoL/QoL.lua:145: if not GSE.Patron then return end
+GSE_QoL/QoL.lua:146: if not GSE.ComputeSequenceChecksum then return end
+GSE_QoL/QoL.lua:150: seq.MetaData.Checksum = GSE.ComputeSequenceChecksum(seq)
+GSE_Utils/GSE_Utils.toc:5: ## Version: 3.3.20-9-gd5e65ce-PatronBuild
+GSE_Utils/GSE_Utils.toc:31: Patrons.lua
+GSE_Utils/Patrons.lua:7: Statics.Patrons = {

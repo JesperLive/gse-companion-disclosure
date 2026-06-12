@@ -131,6 +131,16 @@ All files acquired on the dates shown. I can provide any of these files, or the 
 
 This is a description of behavior in distributed software, backed by quoted code and reproduction steps. It is not a claim about anyone's character, and it does not cover community moderation, account bans, or any dispute between projects — only what the shipped application does. Reach your own conclusion from the files.
 
+## Files in this repository
+
+- `README.md` — this document.
+- `hashes.txt` — SHA-256 hashes for the installer, `app.asar`, and both addon builds.
+- `evidence/app_asar_grip_region.js` — the extracted region of the Companion's `app.asar` containing the access-policy, detection, account-flag, and deletion code quoted above. Read the real file instead of trusting the quotes.
+- `evidence/patron_vs_public_build_diff.txt` — the file-tree and content diff of the public vs. PATRON addon build (supports the secondary finding).
+- `evidence/ems_vs_gse_similarity_scan.txt` — a source-similarity scan between GRIP-EMS and GSE, included for completeness so the addon-code question can be checked independently too.
+
+A note on scope: this repository deliberately contains only the shipped code, hashes, and reproduction steps. It does not include community screenshots, private messages, or moderation history — those are a separate matter and are not needed to verify anything here.
+
 ## References
 
 - GSE Companion and addon releases: https://gse.tools/releases
