@@ -1,6 +1,8 @@
 # Undisclosed competitor-addon detection, account flagging, and remote-triggered data deletion in the GSE Companion application
 
 > **Independently re-verified 2026-06-12.** Every SHA-256 below was recomputed against the files on disk and matched; every function name and constant quoted in this document was confirmed present in the current shipped `app.asar` (build hash `209aded…b0f`). The extracted code region is included in this repo at [`evidence/app_asar_grip_region.js`](evidence/app_asar_grip_region.js) so you can read the real file rather than trust the quotes.
+>
+> **Re-verified 2026-06-16:** GSE Companion v0.4.12 is still the current release on gse.tools/releases, and the GSE addon's current CurseForge file is 3.3.22 (uploaded 2026-06-16). All four SHA-256 hashes below still match the files on disk.
 
 **Published:** 2026-06-12
 **Author:** Jesper (JesperLive / MrSataana), developer of GRIP - Enhanced Macro Sequencer (GRIP-EMS)
@@ -78,6 +80,16 @@ for (const [seqName, seqData] of Object.entries(sequences)) {
 
 **This is written against my addon specifically, not a generic heuristic.** GRIP-EMS's TOC declares `## SavedVariablesPerCharacter: GRIP_EMS_CHAR`, which WoW writes to `GRIP-EMS.lua`. The Companion reads exactly `parsed.GRIP_EMS_CHAR.sequences` and keys deletion on `provenanceSource === "gse-legacy"`, which is GRIP-EMS's own internal tag for sequences a user imported from GSE. The routine targets my addon's real on-disk schema, by name.
 
+## The in-game addon points users to the Companion
+
+The free GSE addon hosted on CurseForge (current file 3.3.22) links to the Companion and walks users through installing it, even though the store listing does not mention it. In the shipped free build:
+
+- `GSE_GUI/Editor_Tree.lua` — a clickable in-game link to `https://gse.tools`, the site that distributes the Companion.
+- `GSE/Localization/ModL_enUS.lua` — in-game text reading: "Download the Companion at gse.tools. Once installed, a small bridge addon (GSE Companion Bridge) appears in your addon list — keep it enabled."
+- `GSE_Options/Options.lua` — a "Companion App" settings panel (Auto-Accept Companion Updates, Sync WoW Macros to GSE.Tools).
+
+These strings are byte-identical between the free and PATRON builds. The in-game addon is what points users to the desktop application described above.
+
 ## What I am not claiming
 
 I am being deliberately precise about the limits of this finding:
@@ -95,6 +107,8 @@ GSE ships a separate "PATRON" build alongside the public build on https://gse.to
 - That flag gates features compiled into both builds: raw macro editing, multi-window editing, tab-completion of variables and sequences, click-timing configuration, and advanced export. The PATRON zip additionally ships a `GSE_QoL` module (native icon picker, Skyriding keybind bar, on-save checksum stamper).
 
 For accuracy: CurseForge hosts only the free GSE build; the PATRON build is distributed off-CurseForge via gse.tools. Blizzard's UI Add-On Development Policy, point 1, states that all add-ons must be distributed free of charge and that developers may not create premium versions with additional for-pay features. A paid build of the addon itself, with feature gates, is the category that policy addresses.
+
+Re-verified on the current build (3.3.22, 2026-06-16): the public and PATRON trees are identical except for the version strings in the `.toc` files and the patron-only `GSE_QoL` module. Per the developer's own Patreon, the PATRON build is "role locked so it's only available for Patrons."
 
 ## How to verify all of this yourself
 
@@ -149,3 +163,5 @@ A note on scope: this repository deliberately contains only the shipped code, ha
 - GRIP-EMS on CurseForge: https://www.curseforge.com/wow/addons/grip-enhanced-macro-sequencer
 - Blizzard UI Add-On Development Policy: https://us.forums.blizzard.com/en/wow/t/ui-add-on-development-policy/24534
 - CurseForge moderation policies: https://support.curseforge.com/support/solutions/articles/9000197279-project-and-modpack-moderation-policies
+- Archived copies of the pages cited here: https://archive.org/details/@jesper_driessen/web-archive
+- Where this finding is being discussed: https://www.reddit.com/r/WowUI/comments/1u3z6cs/ and https://www.reddit.com/r/wowaddons/comments/1u3z5j7/
