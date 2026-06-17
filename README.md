@@ -3,6 +3,8 @@
 > **Independently re-verified 2026-06-12.** Every SHA-256 below was recomputed against the files on disk and matched; every function name and constant quoted in this document was confirmed present in the current shipped `app.asar` (build hash `209aded…b0f`). The extracted code region is included in this repo at [`evidence/app_asar_grip_region.js`](evidence/app_asar_grip_region.js) so you can read the real file rather than trust the quotes.
 >
 > **Re-verified 2026-06-16:** GSE Companion v0.4.12 is still the current release on gse.tools/releases, and the GSE addon's current CurseForge file is 3.3.22 (uploaded 2026-06-16). All four SHA-256 hashes below still match the files on disk.
+>
+> **Re-checked 2026-06-17 against the next release:** GSE shipped Companion v0.4.13 and addon 3.3.22-1. Both were diffed statically, without installing. The access-policy detection, account-flagging, and `purgeGripCharSequences` deletion code is byte-identical in 0.4.13 — the only code change in the entire app is one unrelated line in the bridge-queue pruning (`pruneBridgeData`), plus the version string. The addon update was an interface-version bump ("#1914 TOC Updates") with no GRIP-EMS-related change. The 0.4.13 hashes are listed below.
 
 **Published:** 2026-06-12
 **Author:** Jesper (JesperLive / MrSataana), developer of GRIP - Enhanced Macro Sequencer (GRIP-EMS)
@@ -140,6 +142,12 @@ All files acquired on the dates shown. I can provide any of these files, or the 
 - **GSE-3.3.20-9-gd5e65ce-PatronBuild.zip** (PATRON addon build)
   `7ea11bd7dbe6bb64eb1867462197c7ac52e795a0e7a528eeba77d62be475f5a0`
   2,522,115 bytes — acquired 2026-06-11
+- **GSE Companion Setup 0.4.13.exe** (installer, from gse.tools/releases)
+  `d580dc7c7c39fb747b25830e8233d71b7f4404a07d3c8b14262dc3254d114729`
+  81,299,751 bytes — acquired 2026-06-17
+- **resources/app.asar** (0.4.13, extracted statically from the installer)
+  `4f9a2664ea0d2cb5a4f4594299dfd7e74242379fd4fbf2edbf75655893278c5f`
+  6,068,841 bytes — extracted 2026-06-17
 
 ## Scope of this document
 
