@@ -1,0 +1,5 @@
+Base64-obfuscated identifiers found in out/main/index.js (the ONLY base64 strings in the entire app):
+R1JJUC1FTVMubHVh            => GRIP-EMS.lua
+R1JJUF9FTVNfQ0hBUg==        => GRIP_EMS_CHAR
+cHJvdmVuYW5jZVNvdXJjZQ==    => provenanceSource
+Z3NlLWxlZ2FjeQ==            => gse-legacy

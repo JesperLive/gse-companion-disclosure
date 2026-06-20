@@ -11,3 +11,16 @@ How to reproduce:
   sha256sum "<file>"                           (Linux/macOS)
 app.asar path after install:
   %LOCALAPPDATA%\Programs\gse-companion\resources\app.asar
+
+--- 0.4.14 (acquired 2026-06-20) -------------------------------------------------
+24b64bc72d9c56095c7c92b331842a205be6dd3f23830dddab4a850f9f58dbd0  GSE Companion Setup 0.4.14.exe        (81,296,884 bytes)
+217ff61e074d421ed418f12d47f7f342c09eba9d8c15c4a5bc59fc746ff7229e  app.asar (0.4.14, extracted statically)  (file)
+9c8c9588f7a749c81fb710de73e98899ca516f56cdb004fa82547315b5f0239d  out/main/index.js (0.4.14 app logic)
+
+Native modules shipped (unchanged, stock packages):
+36c2d44b9d7b284f393dd9cc425da5ca90511d90717914f7af5d432b2d3ff5dd  cbor-extract node.napi.node
+d1a71f9ac1728082c1b276392725c3e010b98714888579b99152e401abedbf11  ps-list fastlist-0.3.0-x64.exe
+017411f3b0b5c0402cc3b2cb87c32c6fc71abd82e5b17ea6108990096c75a65d  ps-list fastlist-0.3.0-x86.exe
+
+Live server capture 2026-06-20:
+GET https://api.gse.tools/settings/access-policy  ->  {"enforce":false,"updatedAt":null}

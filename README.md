@@ -5,6 +5,8 @@
 > **Re-verified 2026-06-16:** GSE Companion v0.4.12 is still the current release on gse.tools/releases, and the GSE addon's current CurseForge file is 3.3.22 (uploaded 2026-06-16). All four SHA-256 hashes below still match the files on disk.
 >
 > **Re-checked 2026-06-17 against the next release:** GSE shipped Companion v0.4.13 and addon 3.3.22-1. Both were diffed statically, without installing. The access-policy detection, account-flagging, and `purgeGripCharSequences` deletion code is byte-identical in 0.4.13 — the only code change in the entire app is one unrelated line in the bridge-queue pruning (`pruneBridgeData`), plus the version string. The addon update was an interface-version bump ("#1914 TOC Updates") with no GRIP-EMS-related change. The 0.4.13 hashes are listed below.
+>
+> **Updated 2026-06-20 (v0.4.14):** GSE shipped Companion v0.4.14. The detection, account-flagging, and deletion code is unchanged in behaviour, but the four identifiers that name GRIP-EMS (`GRIP-EMS.lua`, `GRIP_EMS_CHAR`, `provenanceSource`, `gse-legacy`) are now base64-encoded and decoded at runtime, and the descriptive function names are minified away. A plain-text search of v0.4.14 for the names in the reproduction steps below returns nothing; the behaviour was not removed, only hidden. Full write-up: [UPDATE-2026-06-20-v0.4.14-obfuscation.md](UPDATE-2026-06-20-v0.4.14-obfuscation.md). The v0.4.14 hashes are in `hashes.txt`.
 
 **Published:** 2026-06-12
 **Author:** Jesper (JesperLive / MrSataana), developer of GRIP - Enhanced Macro Sequencer (GRIP-EMS)
@@ -121,6 +123,8 @@ Re-verified on the current build (3.3.22, 2026-06-16): the public and PATRON tre
 3. Search the contents for: `detectGripEmsAcrossClients`, `syncRestrictedAccountFlag`, `purgeGripCharSequences`, `GRIP-EMS.lua`, `GRIP_EMS_CHAR`, `access-policy`.
 4. Confirm the constants and the `runAccessPolicyCheck` flow shown above.
 
+   Note for v0.4.14 (the current build): the function names in step 3 are minified and the four GRIP-EMS identifiers are base64-encoded, so a plain-text search returns nothing. Use the updated recipe in [UPDATE-2026-06-20-v0.4.14-obfuscation.md](UPDATE-2026-06-20-v0.4.14-obfuscation.md): search for the base64 literals (for example `R1JJUC1FTVMubHVh`) and decode them, or read [evidence/app_asar_grip_region_0.4.14.js](evidence/app_asar_grip_region_0.4.14.js).
+
 **Finding 2 (paid build):**
 
 1. From https://gse.tools/releases, download the public and PATRON zips of the same version.
@@ -160,6 +164,12 @@ This is a description of behavior in distributed software, backed by quoted code
 - `evidence/app_asar_grip_region.js` — the extracted region of the Companion's `app.asar` containing the access-policy, detection, account-flag, and deletion code quoted above. Read the real file instead of trusting the quotes.
 - `evidence/patron_vs_public_build_diff.txt` — the file-tree and content diff of the public vs. PATRON addon build (supports the secondary finding).
 - `evidence/ems_vs_gse_similarity_scan.txt` — a source-similarity scan between GRIP-EMS and GSE, included for completeness so the addon-code question can be checked independently too.
+- `UPDATE-2026-06-20-v0.4.14-obfuscation.md` — the 2026-06-20 update: v0.4.14 keeps the same targeting code but base64-encodes the GRIP-EMS identifiers. Includes the plaintext (0.4.12) vs base64 (0.4.14) comparison, the decode, and an updated reproduction recipe.
+- `FULL-TECHNICAL-AUDIT-v0.4.14.md` — a complete static security audit of v0.4.14. The competitor-targeting above is the focus; the audit also covers the rest of the app (most of which is unremarkable) and notes one unrelated general-security issue in the auto-updater, for completeness.
+- `evidence/app_asar_grip_region_0.4.14.js` — the verbatim v0.4.14 code region (detector, account-flag, deletion, policy orchestrator); the counterpart to the 0.4.12 extract.
+- `evidence/decoded_strings_0.4.14.txt` — the four base64 literals and their decoded values.
+- `evidence/live_access_policy_2026-06-20.json` — a capture of the live server `enforce` flag (`false`) on 2026-06-20, with the request used.
+- `evidence/file_manifest_0.4.14.txt` — SHA-256 of every file in the v0.4.14 installer payload and `app.asar`.
 
 A note on scope: this repository deliberately contains only the shipped code, hashes, and reproduction steps. It does not include community screenshots, private messages, or moderation history — those are a separate matter and are not needed to verify anything here.
 
