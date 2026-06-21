@@ -1,8 +1,8 @@
 # Undisclosed competitor-addon detection, server-gated data deletion, and sequence lock-out in GSE (GnomeSequencer-Enhanced) and the GSE Companion app
 
-> **Independently re-verified 2026-06-12.** Every SHA-256 below was recomputed against the files on disk and matched; every function name and constant quoted in this document was confirmed present in the current shipped `app.asar` (build hash `209aded…b0f`). The extracted code region is included in this repo at [`evidence/app_asar_grip_region.js`](evidence/app_asar_grip_region.js) so you can read the real file rather than trust the quotes.
+> **Independently re-verified 2026-06-12.** Every SHA-256 below was recomputed against the files on disk and matched; every function name and constant quoted in this document was confirmed present in the shipped v0.4.12 `app.asar` (build hash `209aded…b0f`; this README documents v0.4.12, and the dated updates below track every build since through the current v0.4.16). The extracted code region is included in this repo at [`evidence/app_asar_grip_region.js`](evidence/app_asar_grip_region.js) so you can read the real file rather than trust the quotes.
 >
-> **Re-verified 2026-06-16:** GSE Companion v0.4.12 is still the current release on gse.tools/releases, and the GSE addon's current CurseForge file is 3.3.22 (uploaded 2026-06-16). All four SHA-256 hashes below still match the files on disk.
+> **Re-verified 2026-06-16:** on that date, GSE Companion v0.4.12 was the current release on gse.tools/releases, and the GSE addon's CurseForge file was 3.3.22 (uploaded 2026-06-16). All four SHA-256 hashes below still match the files on disk. (The Companion has since moved on to v0.4.16 — see the updates below; the GSE CurseForge stable is still 3.3.22 as of 2026-06-21.)
 >
 > **Re-checked 2026-06-17 against the next release:** GSE shipped Companion v0.4.13 and addon 3.3.22-1. Both were diffed statically, without installing. The access-policy detection, account-flagging, and `purgeGripCharSequences` deletion code is byte-identical in 0.4.13 — the only code change in the entire app is one unrelated line in the bridge-queue pruning (`pruneBridgeData`), plus the version string. The addon update was an interface-version bump ("#1914 TOC Updates") with no GRIP-EMS-related change. The 0.4.13 hashes are listed below.
 >
@@ -135,7 +135,12 @@ Re-verified on the current build (3.3.22, 2026-06-16): the public and PATRON tre
 3. Search the contents for: `detectGripEmsAcrossClients`, `syncRestrictedAccountFlag`, `purgeGripCharSequences`, `GRIP-EMS.lua`, `GRIP_EMS_CHAR`, `access-policy`.
 4. Confirm the constants and the `runAccessPolicyCheck` flow shown above.
 
-   Note for v0.4.14 (the current build): the function names in step 3 are minified and the four GRIP-EMS identifiers are base64-encoded, so a plain-text search returns nothing. Use the updated recipe in [UPDATE-2026-06-20-v0.4.14-obfuscation.md](UPDATE-2026-06-20-v0.4.14-obfuscation.md): search for the base64 literals (for example `R1JJUC1FTVMubHVh`) and decode them, or read [evidence/app_asar_grip_region_0.4.14.js](evidence/app_asar_grip_region_0.4.14.js).
+   Important — match the recipe to the build you downloaded. The steps above are for v0.4.12-v0.4.13, where the identifiers are plain text. The current release as of 2026-06-21 is v0.4.16, and the names in step 3 are not in it; the targeting code changed across releases and a plain-text search of a recent build returns nothing by design. The progression, each with its own working recipe:
+
+   - v0.4.14 base64-encoded the four GRIP-EMS identifiers. Recipe: [UPDATE-2026-06-20-v0.4.14-obfuscation.md](UPDATE-2026-06-20-v0.4.14-obfuscation.md) (search the base64 literal `R1JJUC1FTVMubHVh` and decode it), or read [evidence/app_asar_grip_region_0.4.14.js](evidence/app_asar_grip_region_0.4.14.js).
+   - v0.4.15 and v0.4.16 (the current build) removed the four identifiers from the binary entirely and replaced the fixed deletion with a signed, server-pushed file-modification engine. Recipe for the current build: [UPDATE-2026-06-21-v0.4.15-v0.4.16.md](UPDATE-2026-06-21-v0.4.15-v0.4.16.md) (search the ed25519 key `b531cb8b505ae9752b5b789f26085853b0ba5da5d7e7e244975f0545430d683a`, the `sign.detached.verify` call, and the interpreter op labels `listFiles` / `read` / `deleteKeys` / `setKey` / `write`).
+
+   The releases page may only offer the latest build (v0.4.16); for an older build, verify the SHA-256 of a copy you already have against `hashes.txt`.
 
 **Finding 2 (paid build):**
 

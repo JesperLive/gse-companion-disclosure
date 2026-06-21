@@ -13,7 +13,7 @@ I am the author of GRIP-EMS, a competing World of Warcraft macro addon. Do not t
 
 ## Why this is a separate finding
 
-The Companion disclosures looked for code that targets GRIP-EMS by name. The current addon does something that no name-search would catch: it closes off the ways another addon could read GSE sequences at all. There are two changes, both in the current shipped build, neither of which mentions any competitor.
+The Companion disclosures looked for code that targets GRIP-EMS by name. The current addon does something that no name-search would catch: it closes off the ways another addon could read GSE sequences at all. There are two changes, neither of which mentions any competitor: a locked global namespace, present in every current build including the free CurseForge stable (3.3.22); and a new encrypted sequence format, present in the 3.3.22-10 and later Patron alpha builds (the build I run is 3.3.22-12). Each finding below names the build it is in.
 
 ## Finding 1 - the global GSE namespace is now a locked proxy
 
@@ -47,7 +47,9 @@ In plain English: the live sequence library (`GSE.Library`) is no longer reachab
 
 ## Finding 2 - a new ChaCha20-encrypted sequence format
 
-The current addon ships a new file, `GSE/API/Codec.lua`, dated 2026-06-20 (the same day as the latest Companion). It is a ChaCha20 stream cipher. GSE sequences can now travel in a new format tagged with a `!GSE3!+` prefix, where the payload is encrypted and only the GSE addon can decrypt it, using a key built into the addon. Verbatim (`evidence/gse_addon_codec_chacha20.lua`, from `GSE/API/Codec.lua`):
+Which builds this is in (I checked each zip): the encryption is in the 3.3.22-10 and 3.3.22-12 builds — GSE's Patron alpha line, the files dated 2026-06-20, the same day as the latest Companion. It is NOT in the 3.3.22 stable release on CurseForge (2026-06-16), nor in the 3.3.22-PatronBuild or the 3.3.22-1 alpha. So it postdates the current free release and rides on the Patron/alpha track, which fits its wiring to GSE's "protected" content. (The locked proxy in Finding 1, by contrast, is in every build including the free 3.3.22 stable.)
+
+Those builds ship a new file, `GSE/API/Codec.lua`. It is a ChaCha20 stream cipher. GSE sequences can travel in a new format tagged with a `!GSE3!+` prefix, where the payload is encrypted and only the GSE addon can decrypt it, using a key built into the addon. Verbatim (`evidence/gse_addon_codec_chacha20.lua`, from `GSE/API/Codec.lua`, in the 3.3.22-12-gfb1946e build):
 
 ```
 local C0, C1, C2, C3 = 1634760805, 857760878, 2036477234, 1797285236   -- ChaCha "expand 32-byte k"
@@ -94,11 +96,17 @@ Neither change names my addon, or any competitor, anywhere. That is the point, a
 
 ## How to verify
 
-1. Install the GSE addon (free build on CurseForge, or the build you already run).
-2. Open `Interface/AddOns/GSE/API/Plugins.lua` and read the `publicProxy` block near the bottom. Confirm the global is replaced by a three-function proxy with `__newindex = function() end`.
-3. Open `Interface/AddOns/GSE/API/Storage.lua` line 8 for the stated "deny in-memory scraping by third-party addons" comment.
-4. Open `Interface/AddOns/GSE/API/Codec.lua`. Confirm the ChaCha20 constants (`1634760805`, `857760878`, `2036477234`, `1797285236`), the `keys` table with the 32-byte key, and `GSE.DecodePackedMessage`.
-5. Open `Interface/AddOns/GSE/API/Serialisation.lua` and confirm `DecodeMessage` sends a `!GSE3!+` string to `DecodePackedMessage` and a plain `!GSE3!` string to the readable path.
+For the locked proxy (Finding 1) — any current build, including the free 3.3.22 on CurseForge:
+
+1. Open `Interface/AddOns/GSE/API/Plugins.lua` and read the `publicProxy` block near the bottom. Confirm the global is replaced by a three-function proxy with `__newindex = function() end`.
+2. Open `Interface/AddOns/GSE/API/Storage.lua` line 8 for the stated "deny in-memory scraping by third-party addons" comment.
+
+For the encrypted format (Finding 2) — a 3.3.22-10 or later build (the Patron alpha line, from https://gse.tools/releases). This is NOT in the 3.3.22 stable on CurseForge, so the next two steps need the Patron/alpha build:
+
+3. Open `Interface/AddOns/GSE/API/Codec.lua`. Confirm the ChaCha20 constants (`1634760805`, `857760878`, `2036477234`, `1797285236`), the `keys` table with the 32-byte key, and `GSE.DecodePackedMessage`. If this file is absent, your build is older than 3.3.22-10.
+4. Open `Interface/AddOns/GSE/API/Serialisation.lua` and confirm `DecodeMessage` sends a `!GSE3!+` string to `DecodePackedMessage` and a plain `!GSE3!` string to the readable path.
+
+The SHA-256 below are for the 3.3.22-12-gfb1946e build; verify a copy you have against them.
 
 ## File integrity (SHA-256)
 
