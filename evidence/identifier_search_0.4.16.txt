@@ -1,0 +1,13 @@
+All-encodings search for the four GRIP-EMS identifiers in GSE Companion 0.4.16
+Source: out/main/index.js (SHA-256 5271373bd3de213973282172aa339002dc71c2c88fed39efb13249fbcb078cc2),
+plus the renderer bundle (out/renderer/assets/index-*.js) and the preload bundle (out/preload/index.mjs).
+
+Targets : GRIP-EMS.lua , GRIP_EMS_CHAR , provenanceSource , gse-legacy
+Encodings tested per target: plaintext, base64 (standard / url-safe / no-pad), hex (lower + upper),
+reversed string, decimal char-codes, percent/URL-encoding.
+
+Result  : NONE found - in any encoding, in any of the three bundles.
+
+Context : 0.4.12/0.4.13 had these four in plaintext; 0.4.14 had them as base64; 0.4.15 and 0.4.16 do not
+contain them in any form. The targeting moved off the binary (server-supplied detection field) and the
+deletion became a signed, server-pushed plan engine. See UPDATE-2026-06-21-v0.4.15-v0.4.16.md.

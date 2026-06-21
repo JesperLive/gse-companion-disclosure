@@ -1,4 +1,4 @@
-# Undisclosed competitor-addon detection, account flagging, and remote-triggered data deletion in the GSE Companion application
+# Undisclosed competitor-addon detection, server-gated data deletion, and sequence lock-out in GSE (GnomeSequencer-Enhanced) and the GSE Companion app
 
 > **Independently re-verified 2026-06-12.** Every SHA-256 below was recomputed against the files on disk and matched; every function name and constant quoted in this document was confirmed present in the current shipped `app.asar` (build hash `209aded…b0f`). The extracted code region is included in this repo at [`evidence/app_asar_grip_region.js`](evidence/app_asar_grip_region.js) so you can read the real file rather than trust the quotes.
 >
@@ -7,11 +7,23 @@
 > **Re-checked 2026-06-17 against the next release:** GSE shipped Companion v0.4.13 and addon 3.3.22-1. Both were diffed statically, without installing. The access-policy detection, account-flagging, and `purgeGripCharSequences` deletion code is byte-identical in 0.4.13 — the only code change in the entire app is one unrelated line in the bridge-queue pruning (`pruneBridgeData`), plus the version string. The addon update was an interface-version bump ("#1914 TOC Updates") with no GRIP-EMS-related change. The 0.4.13 hashes are listed below.
 >
 > **Updated 2026-06-20 (v0.4.14):** GSE shipped Companion v0.4.14. The detection, account-flagging, and deletion code is unchanged in behaviour, but the four identifiers that name GRIP-EMS (`GRIP-EMS.lua`, `GRIP_EMS_CHAR`, `provenanceSource`, `gse-legacy`) are now base64-encoded and decoded at runtime, and the descriptive function names are minified away. A plain-text search of v0.4.14 for the names in the reproduction steps below returns nothing; the behaviour was not removed, only hidden. Full write-up: [UPDATE-2026-06-20-v0.4.14-obfuscation.md](UPDATE-2026-06-20-v0.4.14-obfuscation.md). The v0.4.14 hashes are in `hashes.txt`.
+>
+> **Updated 2026-06-21 (v0.4.15 + v0.4.16):** Two more builds shipped. In v0.4.15 the four GRIP-EMS identifiers were removed from the binary entirely (not just encoded), the detection target moved to a server-supplied field, and the single-purpose deletion routine was replaced with a general, ed25519-signed, server-pushed engine that can delete from or rewrite any addon's SavedVariables while WoW is closed (the dependency `tweetnacl` was added to verify those directives). v0.4.16, built twelve minutes later, renamed the two remaining server-facing fields (`detectPattern` to `integrityRef`, `directive` to `task`) and deleted the explanatory comments; the engine is byte-identical. A live instrumented run on 2026-06-21 found the subsystem dormant (server `enforce:false`, no directive sent). Full write-up: [UPDATE-2026-06-21-v0.4.15-v0.4.16.md](UPDATE-2026-06-21-v0.4.15-v0.4.16.md).
+>
+> **Updated 2026-06-21 (in-game addon, separate finding):** A change in the GSE addon itself (build 3.3.22-12), not the Companion. The current addon replaces the global `GSE` namespace with a locked proxy that no longer exposes the sequence library to other addons (GSE's own comment: "to deny in-memory scraping by third-party addons"), and ships a new ChaCha20-encrypted sequence format (`!GSE3!+`) that only the GSE addon can decrypt, using a key built into the addon. Neither change names any competitor. The encrypted format is provisioned but not yet written on disk (the addon decrypts it but never encrypts it; the encoder is server-side or not yet enabled). Full write-up: [UPDATE-2026-06-21-addon-sequence-lockout.md](UPDATE-2026-06-21-addon-sequence-lockout.md).
 
 **Published:** 2026-06-12
 **Author:** Jesper (JesperLive / MrSataana), developer of GRIP - Enhanced Macro Sequencer (GRIP-EMS)
 **Subject software:** GSE Companion v0.4.12 (desktop app), distributed from https://gse.tools/releases
 **Related project:** GSE: Sequences, Variables, Macros (GnomeSequencer-Enhanced), a World of Warcraft addon
+
+---
+
+## What this repository documents
+
+This is a reproducible technical record of behavior in GSE, also known as GnomeSequencer-Enhanced or "GSE: Sequences, Variables, Macros," a World of Warcraft macro addon, and in its desktop companion, the GSE Companion app, distributed from gse.tools. With quoted code and step-by-step reproduction from the public downloads, it documents: the GSE Companion app detecting a competing addon's saved data, reporting it to GSE's server, flagging the user's account, and carrying a server-gated routine to delete that data; the later move of that deletion into a general, ed25519-signed, server-pushed file-modification engine; and changes in the in-game GSE addon that close its sequence data off from other addons, including a new ChaCha20-encrypted sequence format. Every claim is a line you can read in a shipped file. I am a competitor, so do not take my word for it: each section ends with steps to reproduce it yourself.
+
+Keywords for anyone researching this: GSE, GnomeSequencer-Enhanced, GSE Companion, gse.tools, World of Warcraft macro addon, SavedVariables, sequence import and migration, addon security.
 
 ---
 
@@ -170,6 +182,14 @@ This is a description of behavior in distributed software, backed by quoted code
 - `evidence/decoded_strings_0.4.14.txt` — the four base64 literals and their decoded values.
 - `evidence/live_access_policy_2026-06-20.json` — a capture of the live server `enforce` flag (`false`) on 2026-06-20, with the request used.
 - `evidence/file_manifest_0.4.14.txt` — SHA-256 of every file in the v0.4.14 installer payload and `app.asar`.
+- `UPDATE-2026-06-21-v0.4.15-v0.4.16.md` — the 2026-06-21 update: v0.4.15 replaced the fixed purge with a general, ed25519-signed, server-pushed file-modification engine and moved detection to a server-supplied field; v0.4.16 renamed the remaining fields and stripped the comments. Includes the verbatim engine code, the runtime capture, reproduction steps, and the v0.4.15/v0.4.16 hashes.
+- `evidence/companion_0.4.16_command_engine.js` — the verbatim signed-command engine from v0.4.15/v0.4.16: the signature gate, the directive handler, the plan interpreter and its operations, the event-stream dispatch, the detection scan, and the embedded ed25519 public key.
+- `evidence/identifier_search_0.4.16.txt` — the all-encodings search confirming the four GRIP-EMS identifiers are absent from v0.4.16 in any encoding.
+- `evidence/live_access_policy_2026-06-21.json` — the live server `enforce` flag (`false`) captured 2026-06-21, with the authenticated and anonymous responses.
+- `UPDATE-2026-06-21-addon-sequence-lockout.md` — a separate 2026-06-21 finding in the in-game GSE addon (not the Companion): the global `GSE` namespace is now a locked proxy that denies in-memory reads by third-party addons, and a new ChaCha20-encrypted sequence format (`!GSE3!+`) is provisioned that only the GSE addon can decrypt. Includes verbatim code, the addon-file hashes, and reproduction steps.
+- `evidence/gse_addon_locked_proxy.lua` — the verbatim locked-proxy block from the addon's `GSE/API/Plugins.lua`.
+- `evidence/gse_addon_codec_chacha20.lua` — the verbatim `GSE/API/Codec.lua`: the ChaCha20 cipher, the embedded 32-byte key, and `DecodePackedMessage`.
+- `evidence/gse_addon_serialisation_dispatch.lua` — the verbatim `EncodeMessage` / `DecodeMessage` dispatch that routes a `!GSE3!+` string to the decrypter.
 
 A note on scope: this repository deliberately contains only the shipped code, hashes, and reproduction steps. It does not include community screenshots, private messages, or moderation history — those are a separate matter and are not needed to verify anything here.
 

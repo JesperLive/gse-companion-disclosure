@@ -24,3 +24,31 @@ d1a71f9ac1728082c1b276392725c3e010b98714888579b99152e401abedbf11  ps-list fastli
 
 Live server capture 2026-06-20:
 GET https://api.gse.tools/settings/access-policy  ->  {"enforce":false,"updatedAt":null}
+
+
+--- 0.4.15 (acquired 2026-06-20) -------------------------------------------------
+d516415c9b1ff83c8d1796b071581ef76763511576999018de16076649224a02  GSE Companion Setup 0.4.15.exe        (81,322,606 bytes)
+2e734950eea97015bbf2e69f601da128f28e42de01735f1382033625add3b5e2  app.asar (0.4.15, extracted statically)
+6b13343b4ab4218a37f68080f1bd1a0e0d37dc5c355b68c5dd21a408b806ffc4  out/main/index.js (0.4.15 app logic) (128,949 bytes)
+
+--- 0.4.16 (acquired 2026-06-20) -------------------------------------------------
+264013e8d6508a2cb5b04ac92f22ed5498a8dd38804b91e342ca7fadd1981026  GSE Companion Setup 0.4.16.exe        (81,322,563 bytes)
+84a72f8636c07f1821cba22ff85aae65c530442ae197bc6149922482c8131b70  app.asar (0.4.16, extracted statically)
+5271373bd3de213973282172aa339002dc71c2c88fed39efb13249fbcb078cc2  out/main/index.js (0.4.16 app logic) (128,766 bytes)
+
+New dependency since 0.4.14: tweetnacl (ed25519 directive verification).
+Embedded ed25519 public key (unchanged 0.4.15 -> 0.4.16):
+b531cb8b505ae9752b5b789f26085853b0ba5da5d7e7e244975f0545430d683a
+
+Live server capture 2026-06-21:
+GET https://api.gse.tools/settings/access-policy  ->  {"enforce":false,"updatedAt":null,"integrity":"verified"}
+
+
+--- in-game GSE addon 3.3.22-12-gfb1946e-PatronBuild (files dated 2026-06-20) ----
+fc6eea938f36222feb577f220108e55a01bbb9e29f1edc18300662c492fea748  GSE/API/Codec.lua (ChaCha20 cipher + DecodePackedMessage)  (2,925 bytes)
+6aaad9964db4d0af0194496bf05d90680288990fbb7d992b5212f488b1e81fb6  GSE/API/Plugins.lua (locked-proxy block)                  (5,490 bytes)
+ac2dffe2becbc9b44aa704c8f9655cc95c5a6b07b6e22e71d4eb6700ece5fce8  GSE/API/Serialisation.lua (!GSE3! / !GSE3!+ dispatch)     (18,971 bytes)
+
+The encrypted !GSE3!+ format is decoded by the addon (key embedded in Codec.lua) but
+never encoded on the client; the Companion app rejects it. No !GSE3!+ data was present
+in the captured GSE SavedVariables on 2026-06-21.
