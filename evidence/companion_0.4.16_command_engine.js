@@ -336,3 +336,12 @@ async function gs() {
   } else n === "darwin" ? (jt("open", [t], { detached: !0, stdio: "ignore" }).unref(), setTimeout(() => Y.quit(), 2e3)) : Mn.openPath(t);
   return { ok: !0 };
 }
+
+
+// ---------------------------------------------------------------------------
+// The embedded ed25519 public key, verbatim from the same out/main/index.js.
+// `fo` is the 64-hex key constant; the signature gate (go) above verifies each
+// directive's signature against it (passed to tweetnacl as `ho`, its decoded
+// 32-byte form). It is the only 64-hex constant in the binary and is unchanged
+// between v0.4.15 and v0.4.16.
+const fo = "b531cb8b505ae9752b5b789f26085853b0ba5da5d7e7e244975f0545430d683a";
