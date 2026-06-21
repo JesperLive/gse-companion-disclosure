@@ -19,7 +19,7 @@ Unpack chain: NSIS installer -> standard Electron runtime + `resources/app.asar`
 (first-party code) + `resources/app.asar.unpacked` (native modules) + `resources/addon`
 (the 3-file in-game bridge addon) + `app-update.yml` (auto-update from GitHub
 `TimothyLuke/GSE-Companion`). 86 payload files + 512 asar files enumerated and hashed
-(see `evidence/gse_companion_file_manifest.txt`).
+(see `evidence/file_manifest_0.4.14.txt`).
 
 ## Verdict
 
