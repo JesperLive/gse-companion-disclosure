@@ -52,3 +52,39 @@ ac2dffe2becbc9b44aa704c8f9655cc95c5a6b07b6e22e71d4eb6700ece5fce8  GSE/API/Serial
 The encrypted !GSE3!+ format is decoded by the addon (key embedded in Codec.lua) but
 never encoded on the client; the Companion app rejects it. No !GSE3!+ data was present
 in the captured GSE SavedVariables on 2026-06-21.
+
+
+--- 0.4.20 (acquired 2026-06-28) -------------------------------------------------
+805d34d8ff6e3a54360546241935d24b21ca81484ff9feae97d91b40f917b274  GSE Companion Setup 0.4.20.exe        (81,326,173 bytes)
+41e427a5eca7c68f7f1e97b8475de9b8f67b6ae1dc7888e7019de731b2c9e43b  app.asar (0.4.20, extracted statically)  (6,202,665 bytes)
+9d5d897585b7b85d6cd6befb70a2990a58dcf7ba4dd07e06bd02aa4e7f2492c9  out/main/index.js (0.4.20 app logic) (136,601 bytes)
+
+0.4.20 generalized the unsigned diagnostic upload: it now reads server-specified
+arbitrary files under Interface\AddOns and WTF (any file, 4 MB cap, no "..") and POSTs
+their content to api.gse.tools/diagnostic/upload, triggered by a companion:request SSE push.
+
+--- 0.4.21 (acquired 2026-06-29) -------------------------------------------------
+341fb6212bb950e5d88f92112ede41dbaa06e84e44e4ada12fe76f85408fff73  GSE Companion Setup 0.4.21.exe        (81,326,335 bytes)
+23803e849fe6aaf0373c7c40a416b631ae14520c1627ce050fdd0270c41968f7  app.asar (0.4.21, extracted statically)  (6,202,921 bytes)
+12f5bd5231889ad6f9863b9c0f20aa3a327f14074c9a024d28dc1db8eee60e30  out/main/index.js (0.4.21 app logic) (136,857 bytes)
+
+0.4.21 is a sync-notification dedup only.
+
+--- 0.4.22 (acquired 2026-07-01) -------------------------------------------------
+61015247508dc209ff3118cbd8842216ccd1c31c19dd94f9f80788c6ee1b665d  GSE Companion Setup 0.4.22.exe        (81,326,397 bytes)
+27716e71c29d9403e0e225cec97f03995a864bf3f4855024e255ec21454cd6e1  app.asar (0.4.22)                        (6,203,376 bytes; = the INSTALLED app.asar, verified 2026-07-09)
+56598af576046dc7c96ddcd401d96549032a3824d03f9a28aa19f86b78923a2b  out/main/index.js (0.4.22 app logic) (137,312 bytes)
+
+0.4.22 adds a BugGrabber/BugSack SavedVariables reader to the always-on gather, so their
+error-log content is attached to every diagnostic upload. The embedded ed25519 public key
+is unchanged (b531cb8b505ae9752b5b789f26085853b0ba5da5d7e7e244975f0545430d683a).
+The four GRIP-EMS identifiers are absent from 0.4.20/0.4.21/0.4.22 in 18 encodings tested.
+
+Live server capture 2026-07-09 (authenticated with the account token, and anonymous):
+GET https://api.gse.tools/settings/access-policy  ->  {"enforce":false,"updatedAt":null,"integrity":"verified"}
+A ~30-minute decrypted TLS capture on 2026-07-09 (WoW closed, GRIP-EMS present, two manual
+syncs) showed only GSE content sync: no companion:request directive, no PATCH/PUT/DELETE, no
+/diagnostic upload, restrictedAccount read-only, and no change to GRIP-EMS.lua on disk.
+
+Evidence file added 2026-07-09:
+2e549b9ed5057936c1de2f1ff3f58fbba4d50004a6f54c36f7bbcd43bc017138  evidence/companion_0.4.22_main_beautified.js  (178,366 bytes; js-beautify formatted copy of the 0.4.22 out/main/index.js, whose authoritative minified hash is 56598af5...b78923a2b above)

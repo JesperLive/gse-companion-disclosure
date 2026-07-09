@@ -3,7 +3,7 @@ description: >-
   Reproducible technical disclosure of the GSE Companion desktop app and the
   in-game GSE (GnomeSequencer-Enhanced) addon for World of Warcraft:
   competitor-addon detection, server-gated data deletion moved into a signed
-  server-pushed file engine, and a new ChaCha20-encrypted sequence format.
+  server-pushed file engine, a diagnostic upload widened to read arbitrary addon files, and a new ChaCha20-encrypted sequence format.
   Quoted code, SHA-256 hashes, and steps to reproduce. I am a competitor;
   verify it yourself.
 theme: jekyll-theme-cayman

@@ -1,8 +1,8 @@
 # Undisclosed competitor-addon detection, server-gated data deletion, and sequence lock-out in GSE (GnomeSequencer-Enhanced) and the GSE Companion app
 
-> **Independently re-verified 2026-06-12.** Every SHA-256 below was recomputed against the files on disk and matched; every function name and constant quoted in this document was confirmed present in the shipped v0.4.12 `app.asar` (build hash `209aded…b0f`; this README documents v0.4.12, and the dated updates below track every build since through the current v0.4.16). The extracted code region is included in this repo at [`evidence/app_asar_grip_region.js`](evidence/app_asar_grip_region.js) so you can read the real file rather than trust the quotes.
+> **Independently re-verified 2026-06-12.** Every SHA-256 below was recomputed against the files on disk and matched; every function name and constant quoted in this document was confirmed present in the shipped v0.4.12 `app.asar` (build hash `209aded…b0f`; this README documents v0.4.12, and the dated updates below track every build since through the current v0.4.22). The extracted code region is included in this repo at [`evidence/app_asar_grip_region.js`](evidence/app_asar_grip_region.js) so you can read the real file rather than trust the quotes.
 >
-> **Re-verified 2026-06-16:** on that date, GSE Companion v0.4.12 was the current release on gse.tools/releases, and the GSE addon's CurseForge file was 3.3.22 (uploaded 2026-06-16). All four SHA-256 hashes below still match the files on disk. (The Companion has since moved on to v0.4.16 — see the updates below; the GSE CurseForge stable is still 3.3.22 as of 2026-06-21.)
+> **Re-verified 2026-06-16:** on that date, GSE Companion v0.4.12 was the current release on gse.tools/releases, and the GSE addon's CurseForge file was 3.3.22 (uploaded 2026-06-16). All four SHA-256 hashes below still match the files on disk. (The Companion has since moved on to v0.4.22 — see the updates below; the GSE CurseForge stable is still 3.3.22 as of 2026-06-21.)
 >
 > **Re-checked 2026-06-17 against the next release:** GSE shipped Companion v0.4.13 and addon 3.3.22-1. Both were diffed statically, without installing. The access-policy detection, account-flagging, and `purgeGripCharSequences` deletion code is byte-identical in 0.4.13 — the only code change in the entire app is one unrelated line in the bridge-queue pruning (`pruneBridgeData`), plus the version string. The addon update was an interface-version bump ("#1914 TOC Updates") with no GRIP-EMS-related change. The 0.4.13 hashes are listed below.
 >
@@ -11,6 +11,8 @@
 > **Updated 2026-06-21 (v0.4.15 + v0.4.16):** Two more builds shipped. In v0.4.15 the four GRIP-EMS identifiers were removed from the binary entirely (not just encoded), the detection target moved to a server-supplied field, and the single-purpose deletion routine was replaced with a general, ed25519-signed, server-pushed engine that can delete from or rewrite any addon's SavedVariables while WoW is closed (the dependency `tweetnacl` was added to verify those directives). v0.4.16, built twelve minutes later, renamed the two remaining server-facing fields (`detectPattern` to `integrityRef`, `directive` to `task`) and deleted the explanatory comments; the engine is byte-identical. A live instrumented run on 2026-06-21 found the subsystem dormant (server `enforce:false`, no directive sent). Full write-up: [UPDATE-2026-06-21-v0.4.15-v0.4.16.md](UPDATE-2026-06-21-v0.4.15-v0.4.16.md).
 >
 > **Updated 2026-06-21 (in-game addon, separate finding):** A change in the GSE addon itself (build 3.3.22-12), not the Companion. The current addon replaces the global `GSE` namespace with a locked proxy that no longer exposes the sequence library to other addons (GSE's own comment: "to deny in-memory scraping by third-party addons"), and ships a new ChaCha20-encrypted sequence format (`!GSE3!+`) that only the GSE addon can decrypt, using a key built into the addon. Neither change names any competitor. The encrypted format is provisioned but not yet written on disk (the addon decrypts it but never encrypts it; the encoder is server-side or not yet enabled). Full write-up: [UPDATE-2026-06-21-addon-sequence-lockout.md](UPDATE-2026-06-21-addon-sequence-lockout.md).
+>
+> **Updated 2026-07-09 (v0.4.20 to v0.4.22):** Three more Companion builds shipped. The detection, account-flag, and ed25519-signed engine are unchanged from v0.4.15/v0.4.16 (same embedded key). v0.4.20 generalized the unsigned diagnostic upload: on a server push (`companion:request`) it now reads arbitrary files under your `Interface\AddOns` and `WTF` folders (any file, 4 MB cap, path-scoped, `..` rejected) and POSTs their content to `api.gse.tools/diagnostic/upload`, so the collection reaches any addon's files, not only GSE's. v0.4.22 adds your BugGrabber and BugSack error-log SavedVariables to every diagnostic upload. The signed engine can delete from or rewrite any addon's SavedVariables (`.lua` under `WTF`), and it is not gated by the `enforce` flag; that flag only retired the old fixed purge. I ran v0.4.22 under a 30-minute decrypted TLS capture (WoW closed, GRIP-EMS present, two manual syncs): it did only GSE content sync, no `companion:request` directive arrived, `enforce` read false, and no file changed. So the capabilities are in the shipped code, and I did not observe them being exercised in that window. The in-game addon is now 3.3.23-7, and its `!GSE3!+` encoder is still decode-only. Full write-up: [UPDATE-2026-07-09-v0.4.20-v0.4.22.md](UPDATE-2026-07-09-v0.4.20-v0.4.22.md). The 0.4.20 to 0.4.22 hashes are in `hashes.txt`.
 
 **Published:** 2026-06-12
 **Author:** Jesper (JesperLive / MrSataana), developer of GRIP - Enhanced Macro Sequencer (GRIP-EMS)
@@ -21,7 +23,7 @@
 
 ## What this repository documents
 
-This is a reproducible technical record of behavior in GSE, also known as GnomeSequencer-Enhanced or "GSE: Sequences, Variables, Macros," a World of Warcraft macro addon, and in its desktop companion, the GSE Companion app, distributed from gse.tools. With quoted code and step-by-step reproduction from the public downloads, it documents: the GSE Companion app detecting a competing addon's saved data, reporting it to GSE's server, flagging the user's account, and carrying a server-gated routine to delete that data; the later move of that deletion into a general, ed25519-signed, server-pushed file-modification engine; and changes in the in-game GSE addon that close its sequence data off from other addons, including a new ChaCha20-encrypted sequence format. Every claim is a line you can read in a shipped file. I am a competitor, so do not take my word for it: each section ends with steps to reproduce it yourself.
+This is a reproducible technical record of behavior in GSE, also known as GnomeSequencer-Enhanced or "GSE: Sequences, Variables, Macros," a World of Warcraft macro addon, and in its desktop companion, the GSE Companion app, distributed from gse.tools. With quoted code and step-by-step reproduction from the public downloads, it documents: the GSE Companion app detecting a competing addon's saved data, reporting it to GSE's server, flagging the user's account, and carrying a server-gated routine to delete that data; the later move of that deletion into a general, ed25519-signed, server-pushed file-modification engine; the later widening of the app's unsigned diagnostic upload to read arbitrary files under the WoW folders, reaching any addon's data and not only GSE's; and changes in the in-game GSE addon that close its sequence data off from other addons, including a new ChaCha20-encrypted sequence format. Every claim is a line you can read in a shipped file. I am a competitor, so do not take my word for it: each section ends with steps to reproduce it yourself.
 
 Keywords for anyone researching this: GSE, GnomeSequencer-Enhanced, GSE Companion, gse.tools, World of Warcraft macro addon, SavedVariables, sequence import and migration, addon security.
 
@@ -35,13 +37,21 @@ I am a competitor. You should not take my word for anything. This document is wr
 
 ## One-paragraph summary
 
-The GSE Companion is a desktop application that GSE distributes as a tool to "sync" macro sequences to the GSE addon. The shipped application also contains an "access-policy" subsystem that, on login and then every ten minutes: (1) scans every installed World of Warcraft client's SavedVariables for the save file of my addon, `GRIP-EMS.lua`; (2) reports whether my addon is present to GSE's backend and sets a `restrictedAccount` flag on the signed-in user's GSE account; and (3) carries a routine, `purgeGripCharSequences`, that opens my addon's per-character save file and deletes sequences from it, gated behind a server-controlled switch. None of this is described in the Companion's documentation, which presents the app only as a sequence sync tool.
+The GSE Companion is a desktop application that GSE distributes as a tool to "sync" macro sequences to the GSE addon. The shipped application also contains an "access-policy" subsystem, undocumented in the app, that does three things. On login and then every ten minutes, whenever you are signed in, it scans your World of Warcraft SavedVariables for a competing addon named by GSE's server and reports the result, setting a `restrictedAccount` flag on your GSE account. It carries an ed25519-signed, server-pushed engine that, on a signed directive from GSE, can delete entries from or rewrite any addon's `.lua` SavedVariables while WoW is closed. And, since v0.4.20, it carries an unsigned, server-triggered routine that reads arbitrary files under your `Interface\AddOns` and `WTF` folders and uploads their content. In the version first published here (v0.4.12) the detection target was the hard-coded string `GRIP-EMS.lua` and the deletion was a fixed routine, `purgeGripCharSequences`, aimed at my addon by name; that plaintext form is quoted in full below because it is the clearest proof of what the subsystem was built to do, and the dated updates above track how GSE moved the target to its server and generalized the deletion across later builds.
 
 ## What the application is
 
 GSE Companion is an Electron desktop app. Electron apps store their JavaScript in a `resources/app.asar` archive, which is plain text once extracted — there is no decompilation involved. Everything below is quoted from that file in the installed application. Lines beginning with `//` in plain English are my annotations; the code lines are verbatim.
 
 ## Finding 1 — detection, reporting, and conditional deletion of a competitor's data
+
+As it ships in the current build (v0.4.22), this subsystem has three parts, all in the Companion's `out/main/index.js`:
+
+- Detection and flagging. On login and then every ten minutes, whenever you are signed in, the app scans your WoW SavedVariables for a target the server names (the `integrityRef` field in the access-policy response) and reports the result to GSE's backend, setting `restrictedAccount` true or false on your account. In the original build the target was not server-supplied; it was the hard-coded string `GRIP-EMS.lua` shown below.
+- A signed file-modification engine. On a server push (`companion:request`) carrying an ed25519 signature from GSE's embedded key, the app can delete entries from or rewrite any `.lua` SavedVariables file under your `WTF` folder while WoW is closed. It is authorized by the signature, not by the `enforce` flag.
+- A server-triggered file read (added in v0.4.20). On an unsigned server push, the app reads arbitrary files under your `Interface\AddOns` and `WTF` folders and uploads their content; since v0.4.22 it also attaches your BugGrabber and BugSack error logs to every such upload.
+
+Each part is documented build-by-build in the dated updates above and their linked write-ups. The rest of this section quotes the subsystem in the form it was first published (v0.4.12), because there the target is named in plain text and the intent is unambiguous.
 
 **Constants defined in the application:**
 
@@ -98,7 +108,7 @@ for (const [seqName, seqData] of Object.entries(sequences)) {
 
 ## The in-game addon points users to the Companion
 
-The free GSE addon hosted on CurseForge (current file 3.3.22) links to the Companion and walks users through installing it, even though the store listing does not mention it. In the shipped free build:
+The free GSE addon hosted on CurseForge links to the Companion and walks users through installing it, even though the store listing does not mention it. In the shipped free build:
 
 - `GSE_GUI/Editor_Tree.lua` — a clickable in-game link to `https://gse.tools`, the site that distributes the Companion.
 - `GSE/Localization/ModL_enUS.lua` — in-game text reading: "Download the Companion at gse.tools. Once installed, a small bridge addon (GSE Companion Bridge) appears in your addon list — keep it enabled."
@@ -111,8 +121,9 @@ These strings are byte-identical between the free and PATRON builds. The in-game
 I am being deliberately precise about the limits of this finding:
 
 - The detection and the account-flagging run unconditionally whenever a user is signed into the Companion. This is in the shipped code and runs today.
-- The deletion is gated behind the server-side `enforce` flag. Its current value is set by GSE and cannot be observed from the client. I am **not** claiming the deletion is currently switched on for any user.
-- What I am stating is narrow and verifiable: the distributed application, today, contains code that detects a competitor's save file, reports its presence to a server, flags the user's account, and carries a remote-triggered routine to delete that competitor's data. Whether the final switch is currently flipped is the only part not visible from the client.
+- The current signed engine is authorized by an ed25519 signature, not by the `enforce` flag. `enforce` gated the original v0.4.12 purge and still disables parts of the UI, but it does not gate the signed engine, so `enforce:false` does not mean a deletion cannot run. A deletion requires a signed server push, your account as the target, an unexpired directive, and WoW closed.
+- I am not claiming a deletion has happened to anyone. On 2026-07-09 I ran the current build under a decrypted capture, signed in with my addon present and WoW closed: `enforce` read false, no signed directive arrived, and nothing on disk changed. The capability is in the shipped code; I did not observe it being used in that window.
+- What I am stating is narrow and verifiable: the distributed application, today, contains code that detects a competitor's save file, reports its presence to a server, flags the user's account, and carries a remote-triggered routine to delete that competitor's data. Whether GSE sends such a directive to a given user is the part not visible from the client.
 
 ## Finding 2 (secondary) — paid "PATRON" build of the addon
 
@@ -124,7 +135,7 @@ GSE ships a separate "PATRON" build alongside the public build on https://gse.to
 
 For accuracy: CurseForge hosts only the free GSE build; the PATRON build is distributed off-CurseForge via gse.tools. Blizzard's UI Add-On Development Policy, point 1, states that all add-ons must be distributed free of charge and that developers may not create premium versions with additional for-pay features. A paid build of the addon itself, with feature gates, is the category that policy addresses.
 
-Re-verified on the current build (3.3.22, 2026-06-16): the public and PATRON trees are identical except for the version strings in the `.toc` files and the patron-only `GSE_QoL` module. Per the developer's own Patreon, the PATRON build is "role locked so it's only available for Patrons."
+Re-verified 2026-06-16 (addon 3.3.22): the public and PATRON trees are identical except for the version strings in the `.toc` files and the patron-only `GSE_QoL` module. Per the developer's own Patreon, the PATRON build is "role locked so it's only available for Patrons."
 
 ## How to verify all of this yourself
 
@@ -135,12 +146,13 @@ Re-verified on the current build (3.3.22, 2026-06-16): the public and PATRON tre
 3. Search the contents for: `detectGripEmsAcrossClients`, `syncRestrictedAccountFlag`, `purgeGripCharSequences`, `GRIP-EMS.lua`, `GRIP_EMS_CHAR`, `access-policy`.
 4. Confirm the constants and the `runAccessPolicyCheck` flow shown above.
 
-   Important — match the recipe to the build you downloaded. The steps above are for v0.4.12-v0.4.13, where the identifiers are plain text. The current release as of 2026-06-21 is v0.4.16, and the names in step 3 are not in it; the targeting code changed across releases and a plain-text search of a recent build returns nothing by design. The progression, each with its own working recipe:
+   Important — match the recipe to the build you downloaded. The steps above are for v0.4.12-v0.4.13, where the identifiers are plain text. The current release as of 2026-07-01 is v0.4.22, and the names in step 3 are not in it; the targeting code changed across releases and a plain-text search of a recent build returns nothing by design. The progression, each with its own working recipe:
 
    - v0.4.14 base64-encoded the four GRIP-EMS identifiers. Recipe: [UPDATE-2026-06-20-v0.4.14-obfuscation.md](UPDATE-2026-06-20-v0.4.14-obfuscation.md) (search the base64 literal `R1JJUC1FTVMubHVh` and decode it), or read [evidence/app_asar_grip_region_0.4.14.js](evidence/app_asar_grip_region_0.4.14.js).
-   - v0.4.15 and v0.4.16 (the current build) removed the four identifiers from the binary entirely and replaced the fixed deletion with a signed, server-pushed file-modification engine. Recipe for the current build: [UPDATE-2026-06-21-v0.4.15-v0.4.16.md](UPDATE-2026-06-21-v0.4.15-v0.4.16.md) (search the ed25519 key `b531cb8b505ae9752b5b789f26085853b0ba5da5d7e7e244975f0545430d683a`, the `sign.detached.verify` call, and the interpreter op labels `listFiles` / `read` / `deleteKeys` / `setKey` / `write`).
+   - v0.4.15 and v0.4.16 removed the four identifiers from the binary entirely and replaced the fixed deletion with a signed, server-pushed file-modification engine. Recipe: [UPDATE-2026-06-21-v0.4.15-v0.4.16.md](UPDATE-2026-06-21-v0.4.15-v0.4.16.md) (search the ed25519 key `b531cb8b505ae9752b5b789f26085853b0ba5da5d7e7e244975f0545430d683a`, the `sign.detached.verify` call, and the interpreter op labels `listFiles` / `read` / `deleteKeys` / `setKey` / `write`).
+  - v0.4.20 through v0.4.22 (v0.4.22 is the current build, as of 2026-07-01) keep that signed engine and add a server-triggered arbitrary-file capture in v0.4.20 and a BugGrabber/BugSack error-log gather in v0.4.22. Recipe for the current build: [UPDATE-2026-07-09-v0.4.20-v0.4.22.md](UPDATE-2026-07-09-v0.4.20-v0.4.22.md) (search `capture-denied`, the roots function returning `Interface/AddOns` and `WTF`, and the regex `/^!?Bug(Grabber|Sack)\.lua$/`).
 
-   The releases page may only offer the latest build (v0.4.16); for an older build, verify the SHA-256 of a copy you already have against `hashes.txt`.
+   The releases page may only offer the latest build (v0.4.22); for an older build, verify the SHA-256 of a copy you already have against `hashes.txt`.
 
 **Finding 2 (paid build):**
 
@@ -195,6 +207,9 @@ This is a description of behavior in distributed software, backed by quoted code
 - `evidence/gse_addon_locked_proxy.lua` — the verbatim locked-proxy block from the addon's `GSE/API/Plugins.lua`.
 - `evidence/gse_addon_codec_chacha20.lua` — the verbatim `GSE/API/Codec.lua`: the ChaCha20 cipher, the embedded 32-byte key, and `DecodePackedMessage`.
 - `evidence/gse_addon_serialisation_dispatch.lua` — the verbatim `EncodeMessage` / `DecodeMessage` dispatch that routes a `!GSE3!+` string to the decrypter.
+- `UPDATE-2026-07-09-v0.4.20-v0.4.22.md` — the 2026-07-09 update: v0.4.20 generalized the unsigned diagnostic upload to read server-specified arbitrary files under `Interface\AddOns` and `WTF`; v0.4.22 attaches the user's BugGrabber/BugSack error logs to every diagnostic upload; the signed engine is armed independent of the `enforce` flag. Includes the verbatim code pointers, a 30-minute decrypted runtime capture, reproduction steps, and the v0.4.20-v0.4.22 hashes.
+- `evidence/companion_0.4.22_main_beautified.js` — the full beautified `out/main/index.js` of the current build (v0.4.22), so every function this document names can be read in context. Its SHA-256 is in `hashes.txt`.
+- `evidence/live_access_policy_2026-07-09.json` — the live server `enforce` flag (`false`) captured 2026-07-09, authenticated with the account token and anonymously.
 
 A note on scope: this repository deliberately contains only the shipped code, hashes, and reproduction steps. It does not include community screenshots, private messages, or moderation history — those are a separate matter and are not needed to verify anything here.
 
@@ -207,4 +222,10 @@ A note on scope: this repository deliberately contains only the shipped code, ha
 - Blizzard UI Add-On Development Policy: https://us.forums.blizzard.com/en/wow/t/ui-add-on-development-policy/24534
 - CurseForge moderation policies: https://support.curseforge.com/support/solutions/articles/9000197279-project-and-modpack-moderation-policies
 - Archived copies of the pages cited here: https://archive.org/details/@jesper_driessen/web-archive
-- Where this finding is being discussed: https://www.reddit.com/r/WowUI/comments/1u3z6cs/ and https://www.reddit.com/r/wowaddons/comments/1u3z5j7/
+- Where this is being discussed (context, not part of the evidence in this repo):
+  - r/WowUI: https://www.reddit.com/r/WowUI/comments/1u3z6cs/
+  - r/wowaddons: https://www.reddit.com/r/wowaddons/comments/1u3z5j7/
+  - r/wow (the original post): https://www.reddit.com/r/wow/comments/1u25ulq/
+  - r/wow: https://www.reddit.com/r/wow/comments/1urdvdj/
+  - WoW forums (Blizzard) - Re: Paid Addons: https://us.forums.blizzard.com/en/wow/t/re-paid-addons/2314723
+  - Video discussion: https://youtu.be/2Lwqu93TiFY
