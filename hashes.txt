@@ -88,3 +88,13 @@ syncs) showed only GSE content sync: no companion:request directive, no PATCH/PU
 
 Evidence file added 2026-07-09:
 2e549b9ed5057936c1de2f1ff3f58fbba4d50004a6f54c36f7bbcd43bc017138  evidence/companion_0.4.22_main_beautified.js  (178,366 bytes; js-beautify formatted copy of the 0.4.22 out/main/index.js, whose authoritative minified hash is 56598af5...b78923a2b above)
+
+--- 0.4.23 (acquired 2026-07-15) -------------------------------------------------
+394b68fd9be35a22a6f74f81948f38ec54489dfcf14386e0ddbe3d2c9d37f529  GSE Companion Setup 0.4.23.exe        (81,326,323 bytes; UNSIGNED)
+f668f1223af9a47cd2e3443f5e792180c2fade793d03f5cee56f842d51f744d6  app.asar (0.4.23)                        (= the INSTALLED app.asar, verified 2026-07-15)
+588a914dd3f5744ca47756366eca3b2c4f80ebf45c2c5f7f67b8370c09051e01  out/main/index.js (0.4.23 app logic)  (136,361 bytes)
+
+v0.4.23 removed the client-side detection, the syncRestrictedAccountFlag PATCH, and integrityRef; policy:state now returns restricted:false hard-coded ("no client-side presence scan. Any account restriction is decided server-side."). RETAINED: the ed25519 engine (key b531cb8b...683a), the arbitrary-file capture + /diagnostic/upload, the BugGrabber/BugSack error-log gather, and the unsigned --force-run auto-updater. Live 2026-07-15: {"enforce":false,"updatedAt":null,"integrity":"verified"}. Aggregate: 1 of 3,747 member records carries restrictedAccount:true (identity not accessed).
+
+--- in-game GSE addon 3.3.24-1-g6337f05-PatronBuild (acquired 2026-07-15) ----
+No competitor / GRIP / EMS / detection strings in any file. GSE.EncodeMessage writes plain !GSE3! (CBOR+base64); !GSE3!+ (ChaCha20) remains decode-only. Now also declares Interface 120100 (12.1.0). Inert with respect to competitor targeting.
