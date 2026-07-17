@@ -1,0 +1,29 @@
+# This list is deliberately narrow.
+#
+# Nothing here may hide evidence. Every file this repository offers as proof --
+# the hashes, the extracted code regions, the live capture JSON, the beautified
+# builds -- is tracked and must stay tracked. If you are adding a pattern, the
+# test is: could this ever match something a reader needs in order to check a
+# claim? If yes, do not add it. Name the one file instead.
+#
+# Note what is NOT here, on purpose:
+#   *.json   -- evidence/live_access_policy_*.json are evidence
+#   *.js     -- evidence/*.js are the extracted builds
+#   *.txt    -- hashes.txt is the spine of the whole repository
+
+# Verification manifests produced by the author's audit tooling.
+# Internal working state, not evidence, and not part of the record.
+*.verify.json
+
+# Jekyll build output (this repo is served by GitHub Pages via _config.yml).
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+# OS and editor cruft.
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
