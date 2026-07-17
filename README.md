@@ -1,8 +1,8 @@
-# Undisclosed competitor-addon detection, server-gated data deletion, and sequence lock-out in GSE (GnomeSequencer-Enhanced) and the GSE Companion app
+# Undisclosed competitor-addon detection, server-gated data deletion, and sequence lock-out in GSE (GnomeSequencer-Enhanced) and the GSE Companion app — a record of what shipped, and what GSE has since removed
 
 > ## ⚠ Read this first — correction notice (2026-07-17)
 >
-> **Finding 2 of this repository (the "PATRON" build / pay-gate argument) is substantially retracted.** I claimed GSE withheld add-on code behind a Patreon role lock. That was false: `GSE_QoL` is public source in GSE's own GitHub repository, free to anyone, and nothing checks entitlement. **Blizzard policy point 2 is satisfied and my point-2 argument is withdrawn in full; my point-1 reading is substantially weakened.** GSE's claim that the addon is "100% free" is true and checkable. Full detail in the retraction block further down and in [UPDATE-2026-07-17-v0.4.24.md](UPDATE-2026-07-17-v0.4.24.md).
+> **Finding 2 of this repository (the "PATRON" build / pay-gate argument) is substantially retracted.** I claimed GSE withheld add-on code behind a Patreon role lock. That was false: `GSE_QoL` is public source in GSE's own GitHub repository, free to anyone, and nothing checks entitlement. **Blizzard policy point 2 is satisfied and my point-2 argument is withdrawn in full.** My point-1 reading is narrower than it was, but point 1 is a separate test and I am not withdrawing it on point 2's evidence — I made that mistake once already, on 2026-07-17, and it is corrected below. Full detail in the retraction block further down and in [UPDATE-2026-07-17-v0.4.24.md](UPDATE-2026-07-17-v0.4.24.md).
 >
 > **Finding 1 (the Companion) is unaffected** and stands on its own evidence. Note also that, as of Companion **v0.4.26** (2026-07-17), the arbitrary-file capture that Finding 1 describes has been **removed** by GSE — see the v0.4.26 entry below. What remains is the unsigned auto-updater.
 >
@@ -30,9 +30,15 @@
 >
 > I claimed that `QoL.lua` is "not freely accessible to or viewable by the general public" and that the 3.3.24-2 restructure "withholds 473 lines of add-on code behind a Patreon role lock". **Both are false.** `GSE_QoL` is **public source in GSE's own GitHub repository** and has been since **2024-07-07** (100+ commits; the restructure commit `7732fe5` was made *to that public repo*, which reports `"private": false`). The GitHub copy of `QoL.lua` is **byte-identical** to the PATRON zip's once line endings are normalised — 20,942 B LF vs 21,415 B CRLF, and the 473-byte difference is exactly the line count. `patreonBuild.js`, in the same public repo, simply copies the folder into the release.
 >
-> **Nothing checks entitlement**, so anyone can download the three files for free and every gated feature works. `Statics.Patrons` has exactly one functional reference in the whole addon — a `SetText` on the About page. It is a credits list; it gates nothing. GSE's CurseForge description says *"This addon is 100% free. There are extra modules available for GSE for power users stored in GSE's GitHub repository"* — **that statement is true and checkable.**
+> **Nothing checks entitlement**, so anyone can download the three files for free and every gated feature works. `Statics.Patrons` has exactly one functional reference in the whole addon — a `SetText` on the About page. It is a credits list; it gates nothing.
 >
-> **Blizzard policy point 2 is satisfied and my point-2 argument is withdrawn in full. My point-1 reading is substantially weakened**, since no monetary compensation is required to access any feature. The Patreon role-locks the prebuilt *zip*; it does not withhold the *code*. I compared the two zips to each other and never opened the repository, and the repository is where point 2 is decided.
+> **Blizzard policy point 2 is satisfied and my point-2 argument is withdrawn in full.** The Patreon role-locks the prebuilt *zip*; it does not withhold the *code*. I compared the two zips to each other and never opened the repository, and the repository is where point 2 is decided. The evidence for this retraction is the public repo, which has been public since 2024-07-07 and is unaffected by anything that happened this month.
+>
+> **Correction to this retraction, same day.** When I first wrote this block I also withdrew point 1, saying my "point-1 reading is substantially weakened." That was an error in the opposite direction, and I am fixing it here rather than quietly dropping it. Point 2 asks whether the code is completely visible. Point 1 asks whether the add-on is distributed free of charge and whether there are premium versions with additional for-pay features. Those are different tests. `GSE_QoL` being public source answers the first one. It does not answer the second, and I should not have let one carry the other.
+>
+> What I will say on point 1 is narrower than what I said in June, and it is this: no monetary compensation is required to *obtain* any feature. The code is public, it is free, and nothing checks entitlement. What the Patreon buys is the prebuilt zip and the convenience of not assembling it yourself. Whether that is a "premium version with additional for-pay features" within the meaning of point 1 is an argument I no longer think is clear-cut, and it is not mine to decide.
+>
+> One thing I am deliberately **not** doing: GSE's CurseForge description now reads *"This addon is 100% free. There are extra modules available for GSE for power users stored in GSE's GitHub repository."* I am not citing that as evidence in either direction. It appears on 3.3.25, uploaded 2026-07-17. I cannot tell from outside whether it is long-standing or recent, and a description written at one point in time is not an independent check on what the builds did over the preceding six weeks. Treating it as confirmation would be circular reasoning, and I have already made one error in this block by reaching for the nearest available conclusion.
 >
 > **Findings 1 (the Companion) and the addon lock-out finding are unaffected** — they were verified against shipped builds and do not turn on the pay-gate question. Details: the retraction block in [UPDATE-2026-07-17-v0.4.24.md](UPDATE-2026-07-17-v0.4.24.md) and the corrections inside Finding 2 below.
 >
@@ -290,9 +296,12 @@ All files acquired on the dates shown. I can provide any of these files, or the 
 
 This is a description of behavior in distributed software, backed by quoted code and reproduction steps. It is not a claim about anyone's character, and it does not cover community moderation, account bans, or any dispute between projects — only what the shipped application does. Reach your own conclusion from the files.
 
+That scope has not changed. The correspondence — the CurseForge moderation ticket, the cease and desist I sent, the access request, the platform reply — is in [MODERATION-RECORD.md](MODERATION-RECORD.md), deliberately kept out of this document. It is there because leaving it out entirely would give a misleading picture of what has happened since June, not because it is evidence. **It is my account of what I was told, and most of it you cannot check.** Nothing in this README depends on any of it. If you only read one of these two files, read this one.
+
 ## Files in this repository
 
 - `README.md` — this document.
+- `MODERATION-RECORD.md` — the correspondence: the CurseForge moderation ticket, the cease and desist I sent, the access request that bounced, the platform reply, the forum ban. Deliberately separate. It is my account of what I was told, most of it is not checkable by you, and nothing in this README rests on it.
 - `hashes.txt` — SHA-256 hashes for the installer, `app.asar`, and both addon builds.
 - `evidence/app_asar_grip_region.js` — the extracted region of the Companion's `app.asar` containing the access-policy, detection, account-flag, and deletion code quoted above. Read the real file instead of trusting the quotes.
 - `evidence/patron_vs_public_build_diff.txt` — the file-tree and content diff of the public vs. PATRON addon build (supports the secondary finding).
@@ -317,7 +326,7 @@ This is a description of behavior in distributed software, backed by quoted code
 - `UPDATE-2026-07-15-v0.4.23.md` — the 2026-07-15 update: v0.4.23 removed the client-side detection and the `restrictedAccount` write (the decision moved to GSE's server); the ed25519 engine, the arbitrary-file capture, the BugGrabber/BugSack gather, and the unsigned updater all remain. Addon 3.3.24-1 stays inert. Includes the confirmed 0.4.22-to-0.4.23 change set and the 0.4.23 hashes.
 - `UPDATE-2026-07-17-v0.4.24.md` — the 2026-07-17 update: v0.4.24 adds a real basename guard (`/^GSE.*\.lua$/i`) to the signed engine's write path, so it can no longer write to or delete `GRIP-EMS.lua`; the arbitrary-file capture, the engine's `read` op, the BugGrabber/BugSack gather and the unsigned updater are all retained. Also covers the third `companion:request` branch (`t.idx`), which I had never examined and which turns out to be a code self-attestation channel rather than a data path, and addon 3.3.24-2's pay-gate restructure. Includes the verbatim guard, the fs-call enumeration, a 30-minute decrypted runtime capture, reproduction steps and the 0.4.24 / 3.3.24-2 hashes.
 
-A note on scope: this repository deliberately contains only the shipped code, hashes, and reproduction steps. It does not include community screenshots, private messages, or moderation history — those are a separate matter and are not needed to verify anything here.
+A note on scope: this document deliberately contains only the shipped code, hashes, and reproduction steps. It does not include community screenshots, private messages, or moderation history — those are a separate matter and are not needed to verify anything here. Where that material exists, it is quarantined in [MODERATION-RECORD.md](MODERATION-RECORD.md) and labelled for what it is: unverifiable correspondence, published so the record is complete, carrying none of the weight.
 
 ## References
 
