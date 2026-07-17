@@ -117,3 +117,66 @@ GSE addon 3.3.24-2-g7732fe5 (acquired 2026-07-17) - commit 7732fe5 "Restructure 
   GSE-3.3.24-2-g7732fe5-PatronBuild.zip (PATRON build, 168 files)
     575196444D1FA7EA288867921AC7D3B4D19489E6575C1D4D26D7683C3F7FE795
     2,570,462 bytes
+
+--- 0.4.26 (acquired 2026-07-17) ------------------------------------------------
+c720ec821818fa2b58a4e50d71dbbd0c06c81c01ec573b5e2a4505554d0780d7  GSE Companion Setup 0.4.26.exe        (81,327,286 bytes; UNSIGNED)
+c5e569a768acf03bfbe7fe8aa9a9d6a9c4a52f534fa913cc374f90534a57ac21  app.asar (0.4.26)                        (6,210,073 bytes; = the INSTALLED app.asar, verified 2026-07-17)
+db3f8f5c1d747d05c701cfb0e05538a065c90fbf14d51535b6e3ca882f53b7e3  out/main/index.js (0.4.26 app logic)  (136,850 bytes)
+
+v0.4.26 REMOVED the server-triggered arbitrary-file capture. The `paths` field is no longer
+read (`.paths` 2 -> 0 occurrences); the recursive directory walker is deleted (`withFileTypes`
+2 -> 1); `capture-denied` 1 -> 0 and `capture-` 3 -> 0; the 40,000-entry walk cap (`4e4`) 1 -> 0.
+The SSE `companion:request` else-branch now calls the gather with (requestId, kinds) only.
+`kinds` is a closed set of three flags (errorlogs / log / settings) - no branch treats a kind
+as a path - and the server path deletes `errorlogs` before gathering. File attachment is now
+user-driven: `report:submit` (ipcMain, source "in-app") -> userFilePaths -> single-call-site
+collector, tagged `userFile:`. New user controls: excludeMods, includeErrorLogs.
+NEW markers: userFile: 1, requestFiles 3, userFilePaths 4, excludeMods 4, includeErrorLogs 5,
+report:files-requested 1.
+RETAINED UNCHANGED: the ed25519 engine (key b531cb8b...683a, sign.detached.verify 1 site), the
+0.4.24 write guard (/^GSE.*\.lua$/i), the engine `read` op with NO basename guard, the mandatory
+GSE-scoped gather (Po -> every GSE*.lua + GSE_Companion_Data.lua, server-triggerable, no prompt),
+and the unsigned --force-run auto-updater (fileWin-only asset selection, autoApplyUpdates default
+true, 426 out-of-band trigger, no digest/signature check anywhere).
+The four GRIP-EMS identifiers remain absent in plain/b64/hex/reversed.
+NOTE: no 0.4.25 was acquired; whether it released is unknown.
+
+--- in-game GSE addon 3.3.25 (acquired 2026-07-17) -----------------------------
+ea15d65ba23f91eae0381b2302fabe41443829289c8cc6522dffa34c631c08eb  GSE-3.3.25.zip (FREE build, 165 files)          (2,561,801 bytes)
+a62bc47e28b3ae14a7781703a76963d66e7596747bd0b7960a894e704948ab85  GSE-3.3.25-PatronBuild.zip (PATRON, 169 files)  (2,571,012 bytes)
+
+Changelog: #1979 restructure support requests, #1970 Restructure power user features,
+#1969 WoW 12.1 changes.
+vs 3.3.24-2: patron 168 -> 169; the single added file is `release.json`, a BigWigs packager
+manifest (packaging artifact, not code). Free unchanged at 165. Patron-only set otherwise
+identical (GSE_QoL x3), so the pay-gate structure of 3.3.24-2 is unchanged.
+10 files differ; 5 are .toc version strings. Substantive: GSE_Options/Support.lua (+406 B),
+GSE/Localization/ModL_enUS.lua (+103 B), GSE_Utils/Patrons.lua (+741 B, patron name list).
+Support.lua adds an OPT-IN, DEFAULT-OFF checkbox for BugSack/BugGrabber error logs
+(`errorLogsCheck:SetValue(false)`) feeding `includeErrorLogs` in the submitted payload.
+This answers the 0.4.22 always-on error-log gather finding: no longer always-on, no longer
+server-reachable.
+Competitor scan (provenanceSource / gse-legacy / GRIP-EMS / GRIP_EMS / restrictedAccount /
+integrityRef / detectGrip / purgeGrip): 0 hits in BOTH builds, verified against a control
+(case-insensitive `grip` = 5 hits, all resize-grip UI comments).
+Codec unchanged: Serialisation.lua:8 writes plain "!GSE3!"; all !GSE3!+ occurrences are
+comparison/decode positions. Serialisation.lua, Codec.lua, Plugins.lua byte-identical to
+3.3.24-2. Interface: 11508, 20506, 50504, 120007, 120100 (120100 first appeared in 3.3.24-1,
+NOT new in 3.3.25).
+
+--- GSE_Companion bridge addon (NOT new; present since at least 0.4.20) ---------
+Installed by the DESKTOP APP, not by any addon channel: `rs()` copies GSE_Companion.toc /
+Bootstrap.lua / GSE_Companion.lua out of resources/addon inside the Electron app into
+Interface\AddOns\GSE_Companion, then seeds GSE_Companion_Data.lua with `GSECompanionData = {}`.
+Verified: the three installed files are byte-identical to %LOCALAPPDATA%\Programs\gse-companion\
+resources\addon\. Neither the free nor patron 3.3.25 zip contains the folder. Payload unchanged
+across 0.4.20 / 0.4.22 / 0.4.24 / 0.4.26 (Bootstrap.lua 260 B, GSE_Companion.lua 35,663 B).
+Bridge: inbound = app writes GSE_Companion_Data.lua, WoW loads it as a normal addon file on
+/reload; outbound = app reads GSE SavedVariables after WoW exits.
+GSE_Companion is on GSE's SUBMODULES allowlist (GSE/API/Init.lua:199) so it receives the real
+GSE table via pushGSEInto - the same name-keyed side door past the locked proxy that GSE_QoL uses.
+Lua-injection check: CLEAN. Every key/value passes through
+`co(String(e)).replace(/\\/g,"\\\\").replace(/"/g,'\\"').replace(/\n/g,"\\n")` - backslash-first
+ordering is correct and quotes are escaped, so bridge content cannot break out of its string
+literal. `\r` is unescaped (would yield an unfinished-string syntax error on exotic input) -
+a robustness edge, not a vulnerability.
