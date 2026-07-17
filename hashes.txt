@@ -98,3 +98,22 @@ v0.4.23 removed the client-side detection, the syncRestrictedAccountFlag PATCH, 
 
 --- in-game GSE addon 3.3.24-1-g6337f05-PatronBuild (acquired 2026-07-15) ----
 No competitor / GRIP / EMS / detection strings in any file. GSE.EncodeMessage writes plain !GSE3! (CBOR+base64); !GSE3!+ (ChaCha20) remains decode-only. Now also declares Interface 120100 (12.1.0). Inert with respect to competitor targeting.
+
+GSE Companion 0.4.24 (acquired 2026-07-17)
+  GSE Companion Setup 0.4.24.exe
+    D912618652C9CFDB3EFB5D23E9CD78ED6A3810F02DAD5F41A8546C0CF381D76D
+    81,326,455 bytes
+  resources/app.asar (extracted from the installer)
+    0E1FD392E9BF84BEBCF60EC21531B8E4C364815C7EF87F3593B078CE8C141D0C
+    6,202,541 bytes
+  out/main/index.js
+    26FD8635ED6F39ED2A51D8E1AC7BB67F3C9F384B52C72163DE808D3C20D3B0A9
+    136,477 bytes
+
+GSE addon 3.3.24-2-g7732fe5 (acquired 2026-07-17) - commit 7732fe5 "Restructure power user features"
+  GSE-3.3.24-2-g7732fe5.zip (FREE build, 165 files)
+    435128B3251B41F0C1A421CDE8C9B5D8C3C87C4550CC652D4B749D6A49AF91D5
+    2,561,512 bytes
+  GSE-3.3.24-2-g7732fe5-PatronBuild.zip (PATRON build, 168 files)
+    575196444D1FA7EA288867921AC7D3B4D19489E6575C1D4D26D7683C3F7FE795
+    2,570,462 bytes
