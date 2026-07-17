@@ -12,6 +12,18 @@ How to reproduce:
 app.asar path after install:
   %LOCALAPPDATA%\Programs\gse-companion\resources\app.asar
 
+--- 0.4.13 (acquired 2026-06-17) -------------------------------------------------
+d580dc7c7c39fb747b25830e8233d71b7f4404a07d3c8b14262dc3254d114729  GSE Companion Setup 0.4.13.exe        (81,299,751 bytes)
+4f9a2664ea0d2cb5a4f4594299dfd7e74242379fd4fbf2edbf75655893278c5f  app.asar (0.4.13, extracted statically)  (6,068,841 bytes)
+a415db71cfff218b1510f977a1478f66be5e9434cfb90fc00cffdb8364376d41  out/main/index.js (0.4.13 app logic)  (167,654 bytes)
+
+Added 2026-07-17. The README's 2026-06-17 re-check block says "The 0.4.13 hashes are
+listed below" and describes this build; until today no 0.4.13 rows existed here, so a
+reader following that sentence found nothing. These are those hashes.
+Build identity read from package.json inside app.asar: "version": "0.4.13".
+Recomputed 2026-07-17. Independently reproduces the README's own 0.4.13 finding: the
+only code change from 0.4.12 is one line in pruneBridgeData (+49 bytes of index.js).
+
 --- 0.4.14 (acquired 2026-06-20) -------------------------------------------------
 24b64bc72d9c56095c7c92b331842a205be6dd3f23830dddab4a850f9f58dbd0  GSE Companion Setup 0.4.14.exe        (81,296,884 bytes)
 217ff61e074d421ed418f12d47f7f342c09eba9d8c15c4a5bc59fc746ff7229e  app.asar (0.4.14, extracted statically)  (file)
