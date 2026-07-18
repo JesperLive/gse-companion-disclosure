@@ -923,3 +923,120 @@ async function resolveBatchesAsync(pendingBatches, contextItems, accountName, cl
     const personaId = personaRaw && (personaRaw._id || personaRaw.id || personaRaw);
     if (!personaId) {
       console.warn(`[sync.batch] no persona for list 
+
+// ============================================================================
+// Region B: out/main/index.js -- access-policy orchestrator, 10-minute refresh
+// constant + timer, and runAccountCleanup. These call the detect / flag / purge
+// functions above; they live later in the same out/main/index.js, so they were
+// outside the original contiguous slice. Added 2026-07-18 so every v0.4.12
+// snippet the README quotes is present in this file.
+// ============================================================================
+
+let accessPolicyState = {
+    restricted: false,
+    // last-known detection result
+    enforce: false,
+    // last-known operator flag
+    enforceCheckedAt: 0,
+    // ms epoch of the last enforcement fetch
+    lastSyncResult: null,
+    // { changed, present, memberId } | { error } | { skipped }
+    lastCleanupResult: null
+    // tally from runAccountCleanup()
+};
+const ACCESS_POLICY_REFRESH_MS = 10 * 60 * 1e3;
+let accessPolicyRefreshTimer = null;
+async function runAccessPolicyCheck() {
+    const settings = readSettings();
+    const userSession = settings.userSession;
+    const personaRaw = userSession?.persona ?? userSession?.session?.persona;
+    const personaId = personaRaw && (personaRaw._id || personaRaw.id || personaRaw);
+    const token = userSession?.token ?? userSession?.session?.token ?? null;
+    const clients = (settings.wowPaths ?? []).flatMap((p) => getWowClients(p));
+    const present = detectGripEmsAcrossClients(clients, getWtfAccounts);
+    accessPolicyState.restricted = !!present;
+    if (personaId && token) {
+        try {
+            accessPolicyState.lastSyncResult = await syncRestrictedAccountFlag({
+                apiUrl: GSE_API_URL,
+                token,
+                personaId,
+                present
+            });
+        } catch (err) {
+            accessPolicyState.lastSyncResult = {
+                error: err?.message ?? "sync_threw"
+            };
+        }
+    } else {
+        accessPolicyState.lastSyncResult = {
+            skipped: "no_session"
+        };
+    }
+    const e = await fetchAccessPolicy(GSE_SVC_URL);
+    accessPolicyState.enforce = !!e.enforce;
+    accessPolicyState.enforceCheckedAt = Date.now();
+    if (accessPolicyState.restricted && accessPolicyState.enforce) {
+        try {
+            const wowRunning = await detectRunningWow();
+            const anyRunning = Array.isArray(wowRunning) ? wowRunning.some((c) => c?.running) : !!wowRunning;
+            if (!anyRunning) {
+                accessPolicyState.lastCleanupResult = runAccountCleanup(clients);
+            } else {
+                accessPolicyState.lastCleanupResult = {
+                    skipped: "wow_running"
+                };
+            }
+        } catch (err) {
+            accessPolicyState.lastCleanupResult = {
+                error: err?.message ?? "cleanup_threw"
+            };
+        }
+    } else {
+        accessPolicyState.lastCleanupResult = {
+            skipped: "not_enforced"
+        };
+    }
+    return {
+        restricted: accessPolicyState.restricted,
+        enforce: accessPolicyState.enforce
+    };
+}
+
+function runAccountCleanup(clients) {
+    let filesScanned = 0;
+    let filesPurged = 0;
+    let totalRemoved = 0;
+    for (const client of clients ?? []) {
+        const accounts = getWtfAccounts(client.path) ?? [];
+        for (const account of accounts) {
+            const gseNames = readGseSequenceNamesForAccount(account.path);
+            const charPaths = listGripCharSavedVarPaths([client], () => [account]);
+            for (const p of charPaths) {
+                filesScanned += 1;
+                try {
+                    const r = purgeGripCharSequences(p, gseNames);
+                    if (r?.purged) {
+                        filesPurged += 1;
+                        totalRemoved += r.purged;
+                    }
+                } catch (err) {
+                    console.warn("[policy] purge failed for", p, err?.message ?? err);
+                }
+            }
+        }
+    }
+    return {
+        filesScanned,
+        filesPurged,
+        totalRemoved
+    };
+}
+
+function startAccessPolicyRefreshTimer() {
+    if (accessPolicyRefreshTimer) return;
+    accessPolicyRefreshTimer = setInterval(() => {
+        runAccessPolicyCheck().catch((err) => console.warn("[policy] refresh failed:", err?.message ?? err));
+    }, ACCESS_POLICY_REFRESH_MS);
+    accessPolicyRefreshTimer.unref?.();
+}
