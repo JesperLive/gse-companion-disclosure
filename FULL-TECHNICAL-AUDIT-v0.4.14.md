@@ -17,8 +17,8 @@ in-game "bridge" addon (GSE_Companion) so the website and the game can exchange 
 
 Unpack chain: NSIS installer -> standard Electron runtime + `resources/app.asar`
 (first-party code) + `resources/app.asar.unpacked` (native modules) + `resources/addon`
-(the 3-file in-game bridge addon) + `app-update.yml` (auto-update from GitHub
-`TimothyLuke/GSE-Companion`). 86 payload files + 512 asar files enumerated and hashed
+(the 3-file in-game bridge addon) + `app-update.yml` (a stock electron-builder config naming a GitHub source,
+`TimothyLuke/GSE-Companion`). The app bundles no electron-updater and never reads this file; the real updater uses api.qik.dev (Finding 3), and no public repo by that name exists. 86 payload files + 512 asar files enumerated and hashed
 (see `evidence/file_manifest_0.4.14.txt`).
 
 ## Verdict
@@ -84,7 +84,7 @@ server flag `enforce`. The gate (L2563):
 
 i.e. if GRIP-EMS is present AND the server says enforce. It first checks WoW is closed
 (so the write is not overwritten on logout and the user does not see it happen), then
-runs `_o` (L2578) -> `zs` (L703) per GRIP-EMS file:
+runs `_o` (L2574) -> `zs` (L703) per GRIP-EMS file:
 
     function zs(e, t) {                     // e = path to GRIP-EMS.lua, t = your GSE seq names
       const n = be(e);                      // parse GRIP-EMS SavedVariables
@@ -99,8 +99,8 @@ runs `_o` (L2578) -> `zs` (L703) per GRIP-EMS file:
     }
 
 It rewrites your GRIP-EMS.lua with those sequences removed, atomically (temp +
-rename). `Zn` (L2581) re-runs the whole detect/report/enforce cycle every 10 minutes
-(`$o = 10 * 60 * 1000`), and it also runs at login and after every `auth:me`.
+rename). `Zn` (L2593) re-runs the whole detect/report/enforce cycle every 10 minutes
+(`$o = 10 * 60 * 1e3`, L2545), and it also runs at login and after every `auth:me`.
 
 ### 1e. Two aggravating details
 
@@ -142,9 +142,9 @@ File: `out/main/index.js`, updater block ~L3099-3231.
 
 - Update metadata: POST `https://api.qik.dev/content/gseCompanionRelease/list`.
 - Binary download: GET `https://api.qik.dev/file/<id>` -> `os.tmpdir()/gse-companion-update.exe`.
-- Execution (`es`, L3155): Windows `spawn(downloaded, ["/S","--force-run"], {detached, stdio:"ignore"})`;
+- Execution (`es`, L3152; spawn L3162): Windows `spawn(downloaded, ["/S","--force-run"], {detached, stdio:"ignore"})`;
   Linux chmod 0755 + rename over AppImage + spawn; macOS `open`.
-- No signature, no hash, no code-signing check on the downloaded file before it runs.
+- No signature, no hash, no code-signing check on the downloaded file before it runs. The installers are unsigned too: `Get-AuthenticodeSignature` reports NotSigned on every Companion build tested, back to 0.4.12.
 - Default `autoApplyUpdates: true` (L21) + 4-hour poll: a higher advertised version
   triggers background download then silent install with no user click.
 
@@ -227,11 +227,11 @@ switched on remotely at any time.
     L690    Ls   - read user's current GSE sequence names
     L703    zs   - delete sequences from GRIP-EMS.lua
     L2547   At   - policy orchestrator (login + auth:me + timer)
-    L2578   _o   - runs zs over every GRIP-EMS file
-    L2581   Zn   - 10-minute interval
+    L2574   _o   - runs zs over every GRIP-EMS file
+    L2593   Zn   - 10-minute interval
     L3074   gse:uninstall (GSE/GSE_* scoped rmSync)
-    L3155   es   - download + silently spawn updater installer
-    L3206   ns   - GET api.qik.dev/file/<id>
+    L3152   es   - download + silently spawn updater installer
+    L3186   ns   - GET api.qik.dev/file/<id>
 
 
 ## Scope and limitations
@@ -250,7 +250,9 @@ switched on remotely at any time.
   engine middle was read with parallel reviewers and the load-bearing claims (the four hashes, the
   base64 finding, the CSP, the diagnostic upload, the policy timer) were then re-verified directly.
 - Extraction completeness: the NSIS installer extracted to 86/86 payload files; the 7-Zip "data
-  after the end of archive" warning is the appended Authenticode signature, not a dropped file. The
+  after the end of archive" warning is NSIS overlay data appended after the archive, not a dropped
+  file. It is not an Authenticode signature: `Get-AuthenticodeSignature` reports NotSigned for this
+  installer, and for every Companion installer tested (0.4.12, 0.4.14, 0.4.19, 0.4.23, 0.4.24, 0.4.26). The
   app.asar extracted to 512 files and parsed without error.
 - Not determinable from the client: whether the server enforce flag is ever set true. It read false
   on 2026-06-20.
