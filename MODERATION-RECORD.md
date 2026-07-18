@@ -21,6 +21,9 @@ for it.** Nothing in the README depends on any of it.
 Names of individual support staff are removed. They were doing their jobs and none of this is
 about them.
 
+A dated, ordered version of everything below — same caveats, same redactions — is in
+[MODERATION-RECORD-TIMELINE.md](MODERATION-RECORD-TIMELINE.md).
+
 ---
 
 ## CurseForge / Overwolf — ticket 375489
