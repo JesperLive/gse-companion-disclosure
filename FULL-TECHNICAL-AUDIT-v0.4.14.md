@@ -247,7 +247,7 @@ switched on remotely at any time.
 - Coverage: out/main/index.js (3,240 lines) was read in full. The security-critical regions
   (detection/flag/purge subsystem, IPC surface, file I/O, child_process, auto-updater, in-game
   bridge addon, preload, renderer entry, dependency manifest) were read directly; the bulk sync-
-  engine middle was read with parallel reviewers and the load-bearing claims (the four hashes, the
+  engine middle was read in repeated passes and the load-bearing claims (the four hashes, the
   base64 finding, the CSP, the diagnostic upload, the policy timer) were then re-verified directly.
 - Extraction completeness: the NSIS installer extracted to 86/86 payload files; the 7-Zip "data
   after the end of archive" warning is NSIS overlay data appended after the archive, not a dropped
