@@ -185,6 +185,33 @@ A reader would be right to give it no weight.
 
 ---
 
+## The Reddit thread and the Discord bans
+
+Some of this happened to my own account, months before any of the technical work in this
+repository. I paid for access to a GSE community and was banned before I posted a single message.
+When I tried to ask why, the message would not deliver. The one reply I got was an offer of a
+refund, with no reason attached. I am banned from the two GSE community Discord servers, which
+between them list roughly 9,600 and 4,550 members. I hold the screenshots and I am not publishing
+them, for the reason I publish none anywhere in this repository: a cropped image is not something
+you can check, and the people in them are entitled not to be posted.
+
+In June a third party opened a thread on r/wow about GSE paywalling features and banning paying
+users. I did not write it. I replied to it as the GRIP-EMS developer, with my own account of the
+above. The operator of the GSE United community replied in public and called GRIP-EMS theft. I am
+recording the exchange because his comment stated, in his own words, that a paid Patreon build of
+the addon exists with extra "quality-of-life" features, that he had banned people across several
+servers for belonging to another community, and that gse.tools was built partly in response to
+GRIP converting GSE sequences. He also gave, in that thread, the first ban reason I ever received —
+"thief" — two and a half months after the refund offer and the unanswered question.
+
+The same caveat applies as everywhere else here. This is a public forum dispute and I am one side
+of it. The handles are removed because none of it is about the individuals. The one claim you do
+not have to take on my word is the paid build, which is a documented feature you can read from the
+public download and which the README already covers. The rest is my account, and a person reacting
+to me is not proof I am right about them.
+
+---
+
 ## One thing I got wrong, in private, and am not hiding
 
 My first message to the GSE developer, on 2026-06-11, asked why he was "distributing malware that
@@ -203,3 +230,14 @@ is not a record.
 I hold material I am not publishing. The Qik correspondence contains my own account identifiers.
 The security report concerns a flaw I reported privately and have no interest in helping anyone
 exploit. Individual support staff are unnamed throughout.
+
+There is more, and I would rather name the omission than hide it. I have prepared an Australian
+privacy complaint to the Office of the Australian Information Commissioner about the Companion's
+data handling. It is not lodged — the earliest clean lodge date is 2026-07-20 — and it stays on a
+private regulator track in any case, because it carries my personal details, a subject access
+request, and forensic evidence tied to my own account.
+
+Behind the correspondence above sits an evidence pack: the screenshots, the DM and email exports,
+the CurseForge report bundle, and the admin-panel security report. It stays unpublished for the
+reasons already given here. No screenshots, the security flaw was reported privately, and personal
+data runs through all of it. None of the README depends on any of this.

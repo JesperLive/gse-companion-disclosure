@@ -28,10 +28,12 @@ that verifies it from the public download, which is the part you can check.
 
 | Date / time (UTC) | Event | Recorded in | Confidence |
 |---|---|---|---|
+| 2026-03-26 | I pay for access to a GSE community and am banned before posting; a later DM asking why does not deliver | Screenshots I hold, not published | VERIFIED (my account of it) |
 | 2026-05-09 -> 06-13 | I acquire GSE patron builds on an ongoing basis (3.3.15 onward), predating any dispute | My download folder; see the binary-acquisition write-up | VERIFIED |
 | 2026-06-08 | My GRIP-EMS thread on wowlazymacros.com is closed and hidden | 2026-06-09 support email ("*yesterday* my thread was closed") | VERIFIED (my account of it; forum-side record not held) |
 | 2026-06-09 | My wowlazymacros account is banned; on-site chat closed | Same email ("*this morning* my account has been banned") | INFERRED (my account of it) |
 | 2026-06-09 14:41 | I email wowlazymacros support asking for a reason | `Gmail - Reason for closing and hiding EMS thread, and banning my account.pdf` | VERIFIED |
+| 2026-06-10 | A third-party r/wow thread on GSE's paid build and bans; I reply as the GRIP-EMS developer; the operator of the GSE United community replies in public, calls GRIP-EMS theft, and states a paid Patreon build exists, that he banned people across servers, and that gse.tools was built partly in response to GRIP | Thread + screenshots I hold, handles removed | VERIFIED (my account of it; public thread) |
 | 2026-06-11 01:03 | I acquire Companion 0.4.12 and addon 3.3.20-9 (free + patron) within six seconds | Download folder; binary-acquisition write-up | VERIFIED |
 | 2026-06-11 19:38 | First Discord DM to TimothyLuke, calling the Companion "malware" | DM export | VERIFIED (the wrong word; owned in MODERATION-RECORD) |
 | 2026-06-11 19:30 | Overwolf automated acknowledgement of the moderation report | Overwolf ticket 375489 export | VERIFIED |
