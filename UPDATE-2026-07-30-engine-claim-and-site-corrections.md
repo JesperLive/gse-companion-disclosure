@@ -95,7 +95,12 @@ release archives. They are correct and I am not disputing any of them.
 
 - `PlatformID`, `HelpURL` and `gse.tools` each occur zero times in GRIP-EMS, across
   v1.0.4, v1.9.1, v2.3.5, v2.3.16 and the live tree.
-- `Checksum` occurs exactly 30 times in v2.3.5, and 30 times in v2.3.16.
+- `Checksum` occurs 30 times in v2.3.5 and 30 times in v2.3.16, counted the way their own
+  reproduction block counts (`grep -ric`, case-insensitive). Stated precisely, because the
+  method matters here: case-sensitive `Checksum` is 13 occurrences over 9 lines in 4 files,
+  and 9 of the 30 case-insensitive hits are inside the bundled `LibDeflate` library, which
+  has nothing to do with GSE. Their figure is correct under their method and their row is
+  careful to say the claim is not that it is zero.
 - `SF:ExpandPriority` sits at `Engine/StepFunctions.lua:248-262` and emits N*(N+1)/2
   entries as increasing prefixes, via nested loops.
 - The Sequential secure body advances unconditionally.
@@ -120,8 +125,9 @@ me.
 
 I do not own the `lazygrip` GitHub organisation and I do not own or operate LazyGrip.net.
 I do not control the domain, the hosting, the database, or moderation of the site. On the
-site's repository my permissions are `push` and `triage`. I hold neither `admin` nor
-`maintain`.
+site's repository the collaborator permission the GitHub API returns for me is `write`,
+which carries push and triage. I hold neither `admin` nor `maintain`, and
+`viewerCanAdminister` is false for me on that repository.
 
 What I do have is commit access as a collaborator, by arrangement with the site's owner,
 and that is the established way I contribute. I have authored most of the recent pull
