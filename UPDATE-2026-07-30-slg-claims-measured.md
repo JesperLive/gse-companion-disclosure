@@ -9,6 +9,21 @@ not against my own working copy. Both bundled release archives hash to the value
 own `SHA256SUMS.txt`, so the artifacts are genuine and I measured the same bytes they did.
 Each item carries the command that reproduces it.
 
+1. [GSE was MIT licensed for the whole period in which GRIP-EMS was designed and built](#1-gse-was-mit-licensed-for-the-whole-period-in-which-grip-ems-was-designed-and-built)
+2. [Finding 5 overstates the export, in the build they hashed](#2-finding-5-overstates-the-export-in-the-build-they-hashed)
+3. [The legacy import block is quoted from the second line of the branch](#3-the-legacy-import-block-is-quoted-from-the-second-line-of-the-branch)
+4. [The Priority expansion is not GSE's design](#4-the-priority-expansion-is-not-gses-design)
+5. [Ten years, not 12 to 13](#5-ten-years-not-12-to-13)
+6. [Six counting errors](#6-six-counting-errors)
+7. [Two of five rows in the scienter table are a third party's words](#7-two-of-five-rows-in-the-scienter-table-are-a-third-partys-words)
+8. [The predicate act, from their own three documents](#8-the-predicate-act-from-their-own-three-documents)
+9. [The memo drops context that their own capture supplies](#9-the-memo-drops-context-that-their-own-capture-supplies)
+10. [The site owner line](#10-the-site-owner-line)
+
+Items 7 and 9 are the Discord ones. Item 7 is about who said the words the scienter table
+attributes to the developer. Item 9 is about what their capture records around those words
+that the memo built on top of it leaves out.
+
 ## Where this was supposed to go, and why it is here instead
 
 I wrote these up as ten separate issues and two pull requests, one set per repository, so
