@@ -181,7 +181,46 @@ I emailed the site's support on 2026-06-09 asking for a reason. I have had no re
 **This is the weakest item here and I am flagging that myself.** It is a third-party forum, it is
 not CurseForge, it is not GSE, and I have no evidence connecting the ban to the GSE dispute. I have
 one side of it — mine. I include it for completeness of the record, not because it proves anything.
-A reader would be right to give it no weight.
+A reader would be right to give it no weight. [Update 2026-07-31: this item is now resolved, on the
+public record and not just my word. See the section immediately below.]
+
+---
+
+## Update, 2026-07-31: the forum ban has been lifted, and this item is now on the public record
+
+Everything above about the wowlazymacros.com thread and ban was my account of one side, and I said a
+reader should give it no weight. That has changed, and I am recording the change where I recorded the
+original.
+
+On 2026-07-31 Lutechi, who owns and runs wowlazymacros.com, lifted the ban, put the GRIP-EMS thread
+back up, and posted publicly on his forum explaining what happened. The post is at
+https://wowlazymacros.com/t/on-the-grip-ems-ban/63630. You can read it in full there, and that is the
+point of this update: unlike the rest of this file, this item no longer rests on my word. It rests on
+his, in public, on his own site.
+
+His explanation is that the ban reached him as a one line report that someone was using the forum to
+send people to another site, a long standing rule on WLM. He approved it without looking closely, and
+by his own account did not know who I was, did not know I was an addon developer, and did not know a
+competing addon was involved. He describes it as his own inattention rather than anything coordinated,
+calls it "on me", and says the moderator who handled it is no longer on his team.
+
+I want to be straight about what this does to the record. It closes the item I had already marked as
+the weakest, and it answers the open question against the more damaging reading. The ban was not part
+of the GSE dispute. By the account of the person who approved it, it was an unrelated moderation call
+on his own site that misfired. I had no evidence tying it to GSE when I wrote the original section, and
+he has now said in public that there was no tie.
+
+Credit to Lutechi for how he handled it. He contacted me directly, apologised, and chose to explain it
+on his own forum under his own name rather than leave me as the only one telling it. He runs WLM as a
+hobby, had been away from all of this, and by his account only learned of the situation this week. He
+looked at it properly once it reached him and corrected it in the open, which is more than the
+situation required of him.
+
+He also sent me a private message. Its contents stay private, and nothing here depends on it.
+Everything above is from his public post, at the link.
+
+The technical findings in this repository are a separate track and are unaffected. This was always the
+forum item, kept apart from the Companion work on purpose. It is now closed.
 
 ---
 

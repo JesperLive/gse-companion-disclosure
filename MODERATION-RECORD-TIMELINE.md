@@ -62,6 +62,8 @@ that verifies it from the public download, which is the part you can check.
 | 2026-07-16 20:10 | GSE commit `7732fe5` "Restructure power user features" | Public git history | VERIFIED (public) |
 | 2026-07-17 | Companion 0.4.24 (write guard) and 0.4.26 (capture removed) ship | Repo `UPDATE-2026-07-17-v0.4.24.md`, `UPDATE-2026-07-17-v0.4.26.md` | VERIFIED (technical write-up) |
 | 2026-07-17 | Addon 3.3.25 on CurseForge; description reads "This addon is 100% free" | CurseForge project page | Recorded, not cited as evidence (see README, which rules this out in either direction) |
+| 2026-07-31 | Lutechi, owner of wowlazymacros.com, lifts the ban, restores the GRIP-EMS thread, and posts a public explanation and apology on his forum | Public post at wowlazymacros.com/t/on-the-grip-ems-ban/63630 | VERIFIED (public) |
+| 2026-07-31 | Lutechi also contacts me privately; contents kept private | Private message I hold, not published | VERIFIED (my account of it) |
 
 ---
 
