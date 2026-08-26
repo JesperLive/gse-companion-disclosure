@@ -1,0 +1,26 @@
+# Line endings are pinned here, in the repository, rather than left to a
+# machine-global core.autocrlf setting.
+#
+# Why this file exists: every SHA-256 published in hashes.txt is computed over
+# LF bytes. evidence/companion_0.4.22_main_beautified.js is listed at 178,366
+# bytes, which is its LF length; checked out with CRLF it is 183,764 bytes and
+# its hash does not match the published value. Anyone verifying this repository
+# on Windows would have found a mismatch and had no way to tell whether the
+# cause was line endings or altered evidence. Pinning eol=lf makes every
+# checkout byte-identical on every platform, so a published hash reproduces
+# anywhere.
+#
+# This must not depend on core.autocrlf. That setting is per-machine and
+# invisible to anyone cloning the repository.
+
+* text=auto eol=lf
+
+# Never convert these, whatever the content sniffing decides.
+*.zip   binary
+*.exe   binary
+*.asar  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary

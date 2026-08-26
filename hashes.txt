@@ -192,3 +192,63 @@ Lua-injection check: CLEAN. Every key/value passes through
 ordering is correct and quotes are escaped, so bridge content cannot break out of its string
 literal. `\r` is unescaped (would yield an unfinished-string syntax error on exotic input) -
 a robustness edge, not a vulnerability.
+
+
+--- 0.4.27 (acquired on or before 2026-08-20, characterised 2026-08-26) ---------
+73e805253017628e1dee6865ecb5f2c85ba64bd426988b038b1bc3921df8011f  GSE Companion Setup 0.4.27.exe        (81,327,641 bytes; UNSIGNED)
+d3a1cf027fdba74aedb5f00abd525ad7c80f46fd2e1f47253e6a90e6f3b8f4f3  app.asar (0.4.27, extracted statically)  (6,211,562 bytes)
+6d3bbc72eafbb58938a5b912ca0a6a3851cdb0edb095b291cd0257d1a2da958e  out/main/index.js (0.4.27 app logic)  (138,339 bytes)
+
+--- 0.5.3 (acquired 2026-08-24, characterised 2026-08-26) -----------------------
+a00f4dc3d2eb12d1913dacadac78bc2a0169966359855a3d22c1a1a25237e3dd  GSE Companion Setup 0.5.3.exe         (81,335,293 bytes; UNSIGNED)
+2b98b0041ca4787ffb9cb067a575dcc3f3673b185d09644cfd91985121373ddd  app.asar (0.5.3, extracted statically)   (6,255,817 bytes)
+6c53500dcae3975db8ba679a804d557cd4e7e2c2fc342e9b83c20268bf73376c  out/main/index.js (0.5.3 app logic)   (146,566 bytes)
+
+Both builds read statically: NSIS installer -> app-64.7z -> resources/app.asar ->
+out/main/index.js. Build identity taken from package.json inside app.asar ("version":
+"0.4.27" and "0.5.3"). Declared dependencies are identical in both and unchanged from
+0.4.26: @qikdev/sdk, adm-zip, cbor-x, luaparse, ps-list, tweetnacl.
+
+Every competitor-facing marker reads ZERO in both: the four GRIP-EMS identifiers (and
+a case-insensitive search for "grip" anywhere in index.js), syncRestrictedAccountFlag,
+detectGripEmsAcrossClients, purgeGripCharSequences, runAccountCleanup, integrityRef,
+restrictedAccount, .paths, capture-denied and the 4e4 walk cap.
+RETAINED UNCHANGED in both, at the same counts published for 0.4.26: the ed25519 engine
+(key b531cb8b...683a, sign.detached.verify 1 site), the 0.4.24 write guard
+(/^GSE.*\.lua$/i, 2 occurrences, and the "write refused" string), the BugGrabber/BugSack
+gather (/^!?Bug(Grabber|Sack)\.lua$/i), the user-driven report path (userFile: 1,
+requestFiles 3, userFilePaths 4, excludeMods 4, includeErrorLogs 5), and the unsigned
+--force-run auto-updater with autoApplyUpdates present. Full table:
+UPDATE-2026-08-26-platform-actions-and-current-builds.md.
+
+SCANNING CAVEAT, recorded because it nearly produced a false finding: the error-log
+gather is written as the alternation /^!?Bug(Grabber|Sack)\.lua$/i, so the literal
+strings "BugGrabber" and "BugSack" do NOT occur in index.js even when the capability is
+fully present. Counting the literal returns 0 and reads as a removal. Count the regex.
+Second caveat: the minifier reassigns single-letter identifiers between builds. In these
+two, Ao is the /^GSE.*\.lua$/i regex and Io is the Bug(Grabber|Sack) regex, which is the
+opposite of the naming in the v0.4.24 quote in README.md. Match on the regex literal and
+the error string, never on the variable name.
+
+--- installer hash re-verification, 2026-08-26 ---------------------------------
+Every Companion installer hash published above was recomputed against the file on disk.
+MATCH: 0.4.12, 0.4.13, 0.4.14, 0.4.15, 0.4.16, 0.4.20, 0.4.21, 0.4.22, 0.4.23 (9 of 10).
+MISMATCH: none.
+NOT RE-CHECKABLE: 0.4.26. The installer is no longer held, so the hash published on
+2026-07-17 stands on that date's recompute and could not be re-verified today.
+
+Two installers held but not named above, recorded for completeness:
+743b816e9ad2beecda463a3264fc7623643e628f2ed467f4aa994e155fb72d08  GSE Companion Setup 0.4.19.exe  (81,325,163 bytes)
+978cc99a5f101072542070b0e031fb92247f9b047511acfbb6d9890373e156ef  GSE Companion Setup 0.4.17.exe AND 0.4.18.exe  (81,324,864 bytes each)
+The 0.4.17 / 0.4.18 pair share one hash, independently reproducing the finding already
+recorded in UPDATE-2026-07-17-v0.4.17-v0.4.19.md: the installer distributed as 0.4.17 is
+byte-identical to the one distributed as 0.4.18. No 0.4.17 build was ever acquired.
+
+--- a note on what a reader can and cannot check here ---------------------------
+Of the SHA-256 values in this file, exactly one names a file inside this repository:
+evidence/companion_0.4.22_main_beautified.js. Every other value names an external
+binary (an installer, an extracted app.asar, an index.js, or an addon zip) that is not
+distributed here, so a reader cloning this repository cannot reproduce it without
+obtaining that binary independently. That has always been true and is stated now rather
+than left to be discovered. The one in-repository hash is computed over LF bytes, and
+since 2026-08-26 a .gitattributes pins eol=lf so that it reproduces on every platform.
