@@ -194,7 +194,17 @@ literal. `\r` is unescaped (would yield an unfinished-string syntax error on exo
 a robustness edge, not a vulnerability.
 
 
---- 0.4.27 (acquired on or before 2026-08-20, characterised 2026-08-26) ---------
+--- 0.4.27 (acquired 2026-08-06, characterised 2026-08-26) ----------------------
+CORRECTION 2026-08-27. This header previously read "acquired on or before 2026-08-20".
+That was taken from the file's LastWriteTime, which for every installer in this set reads
+20/08/2026 18:16 to 18:17 because that is when the whole folder was copied during a
+machine rebuild, not when anything was downloaded. CreationTime survived the copy and is
+the field this repository's acquisition record has always used: it reads 06/08/2026
+01:37:56 for 0.4.27, and gives 10/06/2026 for 0.4.12 and 15/07/2026 for 0.4.23, which
+match their release dates. The old statement was not false, since 2026-08-06 is on or
+before 2026-08-20, but it rested on a timestamp that records a copy and it threw away
+precision that was available. Acquisition dates in this repository are my own machine's
+file metadata and are labelled as such; this one now uses the correct field.
 73e805253017628e1dee6865ecb5f2c85ba64bd426988b038b1bc3921df8011f  GSE Companion Setup 0.4.27.exe        (81,327,641 bytes; UNSIGNED)
 d3a1cf027fdba74aedb5f00abd525ad7c80f46fd2e1f47253e6a90e6f3b8f4f3  app.asar (0.4.27, extracted statically)  (6,211,562 bytes)
 6d3bbc72eafbb58938a5b912ca0a6a3851cdb0edb095b291cd0257d1a2da958e  out/main/index.js (0.4.27 app logic)  (138,339 bytes)
@@ -232,10 +242,30 @@ the error string, never on the variable name.
 
 --- installer hash re-verification, 2026-08-26 ---------------------------------
 Every Companion installer hash published above was recomputed against the file on disk.
-MATCH: 0.4.12, 0.4.13, 0.4.14, 0.4.15, 0.4.16, 0.4.20, 0.4.21, 0.4.22, 0.4.23 (9 of 10).
+MATCH: 0.4.12, 0.4.13, 0.4.14, 0.4.15, 0.4.16, 0.4.20, 0.4.21, 0.4.22, 0.4.23 (9 of 11).
 MISMATCH: none.
-NOT RE-CHECKABLE: 0.4.26. The installer is no longer held, so the hash published on
-2026-07-17 stands on that date's recompute and could not be re-verified today.
+NOT RE-CHECKABLE: 0.4.24 and 0.4.26. Neither installer is still held, so the hashes
+published for them on 2026-07-17 stand on that date's recompute and could not be
+re-verified today.
+
+CORRECTION 2026-08-27. The three lines above previously read "(9 of 10)" and named
+0.4.26 alone as not re-checkable. Both were wrong. ELEVEN Companion installer hashes
+stood in this file before the 2026-08-26 pass, not ten, and TWO of those eleven are no
+longer held. The eleven are 0.4.12, 0.4.13, 0.4.14, 0.4.15, 0.4.16, 0.4.20, 0.4.21,
+0.4.22, 0.4.23, 0.4.24 and 0.4.26, and they can be read back out of this repository's git
+history at the commit preceding that pass. The same pass added 0.4.27, 0.5.3, 0.4.19 and
+the 0.4.17 / 0.4.18 pair, whose hashes were computed for the first time rather than
+re-checked, so they sit outside this count and outside the nine. The count was produced by
+a script that located each published hash and then looked for a filename on the SAME LINE.
+Every entry in this file puts the two together on one line except the 0.4.24 block, which
+puts the filename on its own line above the hash. That entry was therefore skipped in
+silence and never appeared in the totals, as a miss rather than as an error.
+No hash changed and no comparison failed; nine matched and none mismatched, before and
+after. What was wrong was the denominator and the list of what could not be checked.
+Recorded rather than quietly amended, because a file whose purpose is verification cannot
+correct its own verification claims invisibly. The same class of mistake is described in
+the SCANNING CAVEAT above: a scan finds only the shape it encodes. That caveat was written
+on this same date, about a different scan, and then not applied to this one.
 
 Two installers held but not named above, recorded for completeness:
 743b816e9ad2beecda463a3264fc7623643e628f2ed467f4aa994e155fb72d08  GSE Companion Setup 0.4.19.exe  (81,325,163 bytes)

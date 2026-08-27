@@ -37,7 +37,7 @@ installer, extract `app-64.7z` from it, take `resources/app.asar`, unpack it, an
 | `out/main/index.js` bytes | 138,339 | 146,566 |
 | `out/main/index.js` SHA-256 | `6d3bbc72eafbb58938a5b912ca0a6a3851cdb0edb095b291cd0257d1a2da958e` | `6c53500dcae3975db8ba679a804d557cd4e7e2c2fc342e9b83c20268bf73376c` |
 | `package.json` version | `0.4.27` | `0.5.3` |
-| Acquisition (file mtime) | 2026-08-20 or earlier | 2026-08-24 16:15 |
+| Acquisition (file CreationTime) | 2026-08-06 01:37 | 2026-08-24 16:15 |
 
 The declared dependency set is identical in both and unchanged from 0.4.26:
 `@qikdev/sdk`, `adm-zip`, `cbor-x`, `luaparse`, `ps-list`, `tweetnacl`. `tweetnacl` is
@@ -358,9 +358,31 @@ file on disk today.
 | 0.4.21 | match |
 | 0.4.22 | match |
 | 0.4.23 | match |
+| 0.4.24 | **not re-checkable, file no longer held** |
 | 0.4.26 | **not re-checkable, file no longer held** |
 
-Nine of ten match. Zero mismatches.
+Nine of eleven match. Zero mismatches.
+
+> **Correction 2026-08-27.** The two lines above previously read "Nine of ten match" and
+> listed 0.4.26 alone as not re-checkable. `hashes.txt` names eleven Companion
+> installers, not ten, and two of them are no longer held. The count came from a script
+> that found each published hash and then looked for a filename on the same line; every
+> entry pairs them on one line except 0.4.24, which puts the filename on the line above,
+> so that entry was skipped without any error being raised. Nine matched and none
+> mismatched both before and after, so no finding moves. The denominator and the
+> not-re-checkable list were wrong and are corrected here rather than silently.
+>
+> The failure is the one this same update warns about two sections earlier, where
+> counting the literal `BugGrabber` returned zero because the shipped regex writes
+> `Bug(Grabber|Sack)`. A scan finds only the shape it encodes. I wrote that caveat on
+> 2026-08-26 and then did not apply it to my own hash parser on the same day.
+>
+> **Acquisition dates in this update were also corrected on 2026-08-27.** The 0.4.27
+> row previously read "Acquisition (file mtime) | 2026-08-20 or earlier". Every
+> installer in that folder carries a LastWriteTime of 20/08/2026 18:16 to 18:17, which
+> is when the folder was copied during a machine rebuild rather than when anything was
+> downloaded. CreationTime survived and reads 06/08/2026 01:37:56 for 0.4.27. The old
+> statement was true but rested on the wrong field and discarded available precision.
 
 Two installers I hold are not named in `hashes.txt` and are recorded here for
 completeness: 0.4.19 (`743b816e9ad2beecda463a3264fc7623643e628f2ed467f4aa994e155fb72d08`,

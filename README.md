@@ -20,11 +20,18 @@
 > **The GSE addon is at 3.3.30.** This repository characterises builds up to 3.3.25;
 > 3.3.26 through 3.3.30 are **not characterised here in either direction**.
 >
-> **Three platforms have been asked to remove GRIP-EMS.** CurseForge removed it on
-> 2026-08-20 and restored it on 2026-08-25. Notices to Wago Addons (2026-08-20) and
-> WoWInterface (2026-08-26) have not resulted in removal as of this date. That
-> correspondence is the other party's to characterise; what I record is what is
-> published and what the platforms currently show.
+> **Three platforms have been asked to remove GRIP-EMS. CurseForge has closed its claim
+> on the merits.** CurseForge removed the listing on 2026-08-20, restored it on
+> 2026-08-25, and on 2026-08-27 re-examined the claim and closed it, resting partly on
+> the claimant's own licence. Notices to Wago Addons (2026-08-20) and WoWInterface
+> (2026-08-26) remain unanswered and both listings are live. A platform closing a claim
+> under its own policy is not a legal ruling and I am not presenting it as one. In the
+> same batch the claimant withdrew several claims of his own, including that GRIP-EMS
+> strips the author's name and that a Discord message marked the moment the capability
+> was built; both withdrawals are recorded alongside the closure. What survives is
+> narrow, and where it is correct about my code I say so. All of it, including the
+> part that runs against me, is in
+> [UPDATE-2026-08-27-curseforge-closes-the-claim.md](UPDATE-2026-08-27-curseforge-closes-the-claim.md).
 >
 > This document is about what shipped. It makes no claim about anyone's motive.
 
@@ -85,6 +92,9 @@ full build-by-build narrative is further down under
 | 2026-08-25 | **Project restored on CurseForge.** GRIP-EMS v2.4.8 released | [platform actions](UPDATE-2026-08-26-platform-actions-and-current-builds.md) |
 | 2026-08-26 | Reported to CurseForge again; a complaint filed with WoWInterface; eight archived GRIP-EMS packages withdrawn from the other party's repositories at my request | [platform actions](UPDATE-2026-08-26-platform-actions-and-current-builds.md) |
 | 2026-08-26 | **0.4.27 and 0.5.3 characterised.** No competitor-facing marker in either | [platform actions](UPDATE-2026-08-26-platform-actions-and-current-builds.md) |
+| 2026-08-27 | **CurseForge re-examined the claim and closed it on the merits**, resting partly on the claimant's own licence. Not a legal ruling | [closure](UPDATE-2026-08-27-curseforge-closes-the-claim.md) |
+| 2026-08-27 | The claimant withdrew the "Executed" evidence row, the author-name-stripping claim, the block-direction statement and two quote attributions, and credited v2.4.8's protections | [closure](UPDATE-2026-08-27-curseforge-closes-the-claim.md) |
+| 2026-08-27 | GSE's author tested v2.4.8 himself and confirmed it honours `noExport` and refuses GSE.Tools encrypted exports | [closure](UPDATE-2026-08-27-curseforge-closes-the-claim.md) |
 
 
 **Published:** 2026-06-12
@@ -429,6 +439,8 @@ Repository infrastructure, listed for completeness rather than as evidence:
 - `.gitattributes` - pins `* text=auto eol=lf` so every checkout is byte-identical on every platform. This is load-bearing for verification, not housekeeping: the published SHA-256 of `evidence/companion_0.4.22_main_beautified.js` is computed over LF bytes, and before this file existed a Windows checkout produced CRLF and a hash mismatch on the one evidence file a reader could actually check.
 - `.gitignore` - excludes local scratch from the repository.
 - `_config.yml` - the Jekyll configuration for the GitHub Pages rendering of this document at https://jesperlive.github.io/gse-companion-disclosure/.
+
+- `UPDATE-2026-08-27-curseforge-closes-the-claim.md` - the 2026-08-27 update, and the first one where a platform decision runs in my favour, which is why it is handled more carefully rather than less. CurseForge re-examined the copyright claim against GRIP-EMS and closed it on the merits, resting partly on the claimant's own licence grant, after having actioned the same claim and removed the listing a week earlier. Their three grounds for the closure are quoted. Records, in the same pass, the five claims withdrawn by the claimant on the same day: the "Executed" evidence row built on a Discord message that turns out to be about window layout, the assertion that GRIP-EMS strips the author's name, the block-direction statement that ran the other way, two quotes reattributed to a third participant, and a positive credit for v2.4.8's protections. Records GSE's author testing v2.4.8 himself and confirming it honours noExport and refuses GSE.Tools encrypted exports, with his own three caveats attached. Records what survives, which is narrow, no longer depends on any Discord message, and is correct about my code where it is correct: PlatformID is at zero references across all 165 Lua files while two other MetaData fields are carried through. Separates the second field alleged alongside it, HelpURL, into the half that holds and the half that does not, and records both. GSE has never had a field called HelpURL, established by a pickaxe search over all 4015 commits and every ref of its repository with two controls proving the search works, and the reproduction commands are given. The field its editor writes is Helplink, and GRIP-EMS reads that one and carries it to the editor, through a rename, and into all eleven locales. But HelpURL was recorded as present in an input this repository examined on 2026-07-30, so something wrote it and the addon history says it was not the addon; GSE.Tools is named as the obvious candidate and flagged as an open question rather than guessed at. Sets out how the field count was reached and why the obvious method undercounts it, since two of the fifteen are read through a local alias that a direct match misses. Includes a section on Blizzard's addon sandbox which measures that GRIP-EMS never writes to, alters or deletes any GSE file or variable, states plainly that this does not answer the surviving claim, and flags one open question I am not qualified to answer, namely whether a format conversion is the thing the provision is aimed at. Carries an observation about cross-project data access as an ecosystem norm, covering both directions and labelled as not being a defence or a rebuttal. Then a table of where the three platforms stand as of that date, with Wago Addons and WoWInterface both unanswered and all three listings live. Then what I could not verify, which includes the CurseForge email itself, since I have never seen it and was not a party to that correspondence. Closes by recording that nothing in this changes the Companion findings above, which stand where the previous update left them. Opens and closes by saying that a platform closing a claim under its own policy is not a legal ruling.
 
 A note on scope: this document deliberately contains only the shipped code, hashes, and reproduction steps. It does not include community screenshots, private messages, or moderation history — those are a separate matter and are not needed to verify anything here. Where that material exists, it is quarantined in [MODERATION-RECORD.md](MODERATION-RECORD.md) and its dated companion [MODERATION-RECORD-TIMELINE.md](MODERATION-RECORD-TIMELINE.md), labelled for what it is: unverifiable correspondence, published so the record is complete, carrying none of the weight.
 
